@@ -19,7 +19,11 @@ class Graph:
         graph_data = ""
 
         for usage in usage_list:
-            graph_data += Graph.graph_data_template % (usage["name"], "'%s'" % usage["date"], usage["NumWorkers"], usage["name"], "lines+markers")
+            graph_data += Graph.graph_data_template % (usage["name"],
+                                                       "'%s'" % usage["date"],
+                                                       usage["NumWorkers"],
+                                                       usage["name"],
+                                                       "lines+markers")
 
         graph_data_list = "team1, team2, team3"
         title = "Cluster Worker Usage"
