@@ -27,10 +27,14 @@ setup(name="databricks-usage-reports-scripts",
       ],
       url="",
       packages=[
-          "databricks-usage-report",
-          "databricks-usage-report/aws",
-          "databricks-usage-report/databricks",
+          "databricksusagereport",
+          "databricksusagereport/aws",
+          "databricksusagereport/databricks",
       ],
+      package_data={
+          "databricksusagereport": ["templates/databricks-graph-data.js"],
+          "databricksusagereport": ["templates/graph-data.js"],
+      },
       platforms="Posix; MacOS X",
       classifiers=[
           "Programming Language :: Python :: 2",
