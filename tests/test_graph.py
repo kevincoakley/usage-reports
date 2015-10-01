@@ -1,6 +1,6 @@
 import unittest
 import datetime
-from databricksusagereport.graph import Graph
+from databricksusagereport.graph.databricks import DataBricksGraph
 
 
 class GraphTestCase(unittest.TestCase):
@@ -98,7 +98,7 @@ class GraphTestCase(unittest.TestCase):
                            "date": datetime.datetime(2015, 10, 1, 1, 0, 0)}]
 
     def test_databricks_graph_no_history(self):
-        databricks_graph = Graph()
+        databricks_graph = DataBricksGraph()
 
         with open(self.db_usage_no_history_file, "r") as f:
             valid_ouput = f.read()
@@ -106,7 +106,7 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual(databricks_graph.create(self.db_usage_no_history), valid_ouput)
 
     def test_databricks_graph_with_history_ordered(self):
-        databricks_graph = Graph()
+        databricks_graph = DataBricksGraph()
 
         with open(self.db_usage_with_history_file, "r") as f:
             valid_ouput = f.read()
@@ -114,7 +114,7 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual(databricks_graph.create(self.db_usage_with_history_ordered), valid_ouput)
 
     def test_databricks_graph_with_history_unordered(self):
-        databricks_graph = Graph()
+        databricks_graph = DataBricksGraph()
 
         with open(self.db_usage_with_history_file, "r") as f:
             valid_ouput = f.read()
