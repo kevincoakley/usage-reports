@@ -15,21 +15,30 @@ class Graph:
 
     @staticmethod
     def create(usage_list):
-
-        graph_data = ""
-        names = []
+        usage_list_transformed = dict()
 
         for usage in usage_list:
-            if usage["name"] not in names:
-                names.append(usage["name"])
+            if usage["name"] not in usage_list_transformed.keys():
+                usage_list_transformed[usage["name"]] = {"x": [usage["date"]],
+                                                         "y": [usage["NumWorkers"]]}
+            else:
+                usage_list_transformed[usage["name"]]["x"].append(usage["date"])
+                usage_list_transformed[usage["name"]]["y"].append(usage["NumWorkers"])
 
-            graph_data += Graph.graph_data_template % (usage["name"],
-                                                       "'%s'" % usage["date"],
-                                                       usage["NumWorkers"],
-                                                       usage["name"],
+        graph_data = ""
+
+        for key, value in usage_list_transformed.iteritems():
+            # Sort X an Y values by X to achieve chronological order
+            y = [y for (x, y) in sorted(zip(value["x"], value["y"]))]
+            x = sorted(value["x"])
+
+            graph_data += Graph.graph_data_template % (key,
+                                                       "'%s'" % "', '".join(map(str, x)),
+                                                       ', '.join(map(str, y)),
+                                                       key,
                                                        "lines+markers")
 
-        graph_data_list = ', '.join(map(str, names))
+        graph_data_list = ', '.join(map(str, usage_list_transformed.keys()))
         title = "Cluster Worker Usage"
 
         filled_template = Graph.databricks_graph_data_template % (graph_data,
