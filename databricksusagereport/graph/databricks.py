@@ -7,9 +7,10 @@ class DataBricksGraph(Graph):
 
     def __init__(self):
         Graph.__init__(self)
+        self.title = "Cluster Worker Usage"
+        self.mode = "lines+markers"
 
-    @staticmethod
-    def create(usage_list):
+    def create(self, usage_list):
         usage_list_transformed = dict()
 
         for usage in usage_list:
@@ -20,6 +21,4 @@ class DataBricksGraph(Graph):
                 usage_list_transformed[usage["name"]]["x"].append(usage["date"])
                 usage_list_transformed[usage["name"]]["y"].append(usage["NumWorkers"])
 
-        return Graph.populate_template(usage_list_transformed,
-                                       "Cluster Worker Usage",
-                                       "lines+markers")
+        return Graph.populate_template(self, usage_list_transformed)

@@ -11,10 +11,10 @@ class Graph:
                                           "templates/graph-data.js")
 
     def __init__(self):
-        pass
+        self.title = None
+        self.mode = None
 
-    @staticmethod
-    def populate_template(usage_list, title, mode):
+    def populate_template(self, usage_list):
         graph_data = ""
 
         for key, value in usage_list.iteritems():
@@ -26,11 +26,11 @@ class Graph:
                                                        "'%s'" % "', '".join(map(str, x)),
                                                        ', '.join(map(str, y)),
                                                        key,
-                                                       mode)
+                                                       self.mode)
 
         graph_data_list = ', '.join(map(str, usage_list.keys()))
 
         filled_template = Graph.databricks_graph_data_template % (graph_data,
                                                                   graph_data_list,
-                                                                  title)
+                                                                  self.title)
         return filled_template
