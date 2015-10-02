@@ -7,7 +7,7 @@ from datetime import datetime
 from pkg_resources import resource_string
 from databricksusagereport.databricks.usage import DatabricksUsage
 from databricksusagereport.github import GitHub
-from databricksusagereport.graph.databricks import DataBricksGraph
+from databricksusagereport.graph.databricks import DatabricksGraph
 
 
 def transform_history_dict(history_dict):
@@ -50,7 +50,7 @@ def main():
         github.upload("%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js
-        databricks_graph = DataBricksGraph()
+        databricks_graph = DatabricksGraph()
         github.upload("%s/graph-data.js" % upload_directory,
                       databricks_graph.create(usage_list=databricks_workers))
 
@@ -63,7 +63,7 @@ def main():
         history_dict = json.loads(downloaded_history)
 
         # Upload graph-data.js
-        databricks_graph = DataBricksGraph()
+        databricks_graph = DatabricksGraph()
         github.upload("%s/graph-data.js" % upload_directory,
                       databricks_graph.create(usage_list=databricks_workers,
                                               history_list=history_dict))

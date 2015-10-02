@@ -1,7 +1,7 @@
 import json
 import unittest
 import datetime
-from databricksusagereport.graph.databricks import DataBricksGraph
+from databricksusagereport.graph.databricks import DatabricksGraph
 
 
 class GraphTestCase(unittest.TestCase):
@@ -108,7 +108,7 @@ class GraphTestCase(unittest.TestCase):
                            "date": datetime.datetime(2015, 10, 1, 1, 0, 0)}]
 
     def test_databricks_graph_single(self):
-        databricks_graph = DataBricksGraph()
+        databricks_graph = DatabricksGraph()
 
         with open(self.db_usage_single_file, "r") as f:
             valid_ouput = f.read()
@@ -116,7 +116,7 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual(databricks_graph.create(usage_list=self.db_usage_single), valid_ouput)
 
     def test_databricks_graph_multiple(self):
-        databricks_graph = DataBricksGraph()
+        databricks_graph = DatabricksGraph()
 
         with open(self.db_usage_multiple_file, "r") as f:
             valid_ouput = f.read()
@@ -124,7 +124,7 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual(databricks_graph.create(usage_list=self.db_usage_multiple), valid_ouput)
 
     def test_databricks_graph_multiple_unordered(self):
-        databricks_graph = DataBricksGraph()
+        databricks_graph = DatabricksGraph()
 
         with open(self.db_usage_multiple_file, "r") as f:
             valid_ouput = f.read()
@@ -133,7 +133,7 @@ class GraphTestCase(unittest.TestCase):
                          valid_ouput)
 
     def test_databricks_graph_history(self):
-        databricks_graph = DataBricksGraph()
+        databricks_graph = DatabricksGraph()
 
         with open(self.db_history_json_file) as j:
             history_list = json.load(j)

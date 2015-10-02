@@ -5,7 +5,7 @@ from datetime import datetime
 from databricksusagereport.graph.graph import Graph
 
 
-class DataBricksGraph(Graph):
+class DatabricksGraph(Graph):
 
     def __init__(self):
         Graph.__init__(self)
