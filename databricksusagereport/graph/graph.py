@@ -12,7 +12,7 @@ class Graph:
 
     def __init__(self):
         self.title = None
-        self.mode = None
+        self.type = None
 
     def populate_template(self, usage_list):
         graph_data = ""
@@ -26,7 +26,7 @@ class Graph:
                                                        "'%s'" % "', '".join(map(str, x)),
                                                        ', '.join(map(str, y)),
                                                        key,
-                                                       self.mode)
+                                                       self.type)
 
         graph_data_list = ', '.join(map(str, usage_list.keys()))
 

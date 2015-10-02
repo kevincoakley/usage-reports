@@ -4,7 +4,8 @@ var data = [ %s ];
 
 var layout = {
     title:'%s',
-    autosize: true,
+    barmode: 'group',
+    showlegend: true,
 };
 
 Plotly.newPlot('myDiv', data, layout);
