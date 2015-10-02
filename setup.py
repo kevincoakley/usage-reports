@@ -3,6 +3,7 @@
 try:
     from setuptools import setup
     extra = dict(install_requires=[
+        "github3.py>=1.0.0a2",
     ],
         include_package_data=True,
         test_suite="tests.suite.load_tests",
