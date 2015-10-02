@@ -1,47 +1,47 @@
 [
   {
     "name": "team1",
-    "NumWorkers": 4,
+    "numWorkers": 4,
     "date": "2015-10-01 01:00:00"
   },
   {
     "name": "team2",
-    "NumWorkers": 8,
+    "numWorkers": 8,
     "date": "2015-10-01 01:00:00"
   },
   {
     "name": "team3",
-    "NumWorkers": 6,
+    "numWorkers": 6,
     "date": "2015-10-01 01:00:00"
   },
   {
     "name": "team1",
-    "NumWorkers": 4,
+    "numWorkers": 4,
     "date": "2015-10-01 02:00:00"
   },
   {
     "name": "team2",
-    "NumWorkers": 6,
+    "numWorkers": 6,
     "date": "2015-10-01 02:00:00"
   },
   {
     "name": "team3",
-    "NumWorkers": 8,
+    "numWorkers": 8,
     "date": "2015-10-01 02:00:00"
   },
   {
     "name": "team1",
-    "NumWorkers": 4,
+    "numWorkers": 4,
     "date": "2015-10-01 03:00:00"
   },
   {
     "name": "team2",
-    "NumWorkers": 10,
+    "numWorkers": 10,
     "date": "2015-10-01 03:00:00"
   },
   {
     "name": "team3",
-    "NumWorkers": 6,
+    "numWorkers": 6,
     "date": "2015-10-01 03:00:00"
   }
 ]
