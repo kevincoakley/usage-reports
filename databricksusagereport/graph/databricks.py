@@ -10,7 +10,7 @@ class DataBricksGraph(Graph):
     def __init__(self):
         Graph.__init__(self)
         self.title = "Cluster Worker Usage"
-        self.mode = "lines+markers"
+        self.type = "bar"
 
     def create(self, usage_list=None, history_list=None):
         if history_list is not None:
