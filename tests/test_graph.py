@@ -113,7 +113,7 @@ class GraphTestCase(unittest.TestCase):
         with open(self.db_usage_single_file, "r") as f:
             valid_ouput = f.read()
 
-        self.assertEqual(databricks_graph.create(self.db_usage_single), valid_ouput)
+        self.assertEqual(databricks_graph.create(usage_list=self.db_usage_single), valid_ouput)
 
     def test_databricks_graph_multiple(self):
         databricks_graph = DataBricksGraph()
@@ -121,7 +121,7 @@ class GraphTestCase(unittest.TestCase):
         with open(self.db_usage_multiple_file, "r") as f:
             valid_ouput = f.read()
 
-        self.assertEqual(databricks_graph.create(self.db_usage_multiple), valid_ouput)
+        self.assertEqual(databricks_graph.create(usage_list=self.db_usage_multiple), valid_ouput)
 
     def test_databricks_graph_multiple_unordered(self):
         databricks_graph = DataBricksGraph()
@@ -129,7 +129,8 @@ class GraphTestCase(unittest.TestCase):
         with open(self.db_usage_multiple_file, "r") as f:
             valid_ouput = f.read()
 
-        self.assertEqual(databricks_graph.create(self.db_usage_multiple_unordered), valid_ouput)
+        self.assertEqual(databricks_graph.create(usage_list=self.db_usage_multiple_unordered),
+                         valid_ouput)
 
     def test_databricks_graph_history(self):
         databricks_graph = DataBricksGraph()
@@ -140,5 +141,6 @@ class GraphTestCase(unittest.TestCase):
         with open(self.db_usage_multiple_file, "r") as f:
             valid_ouput = f.read()
 
-        self.assertEqual(databricks_graph.create(self.db_usage_for_history, history_list),
+        self.assertEqual(databricks_graph.create(usage_list=self.db_usage_for_history,
+                                                 history_list=history_list),
                          valid_ouput)

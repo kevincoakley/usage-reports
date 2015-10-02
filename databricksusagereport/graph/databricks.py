@@ -11,21 +11,16 @@ class DataBricksGraph(Graph):
         self.title = "Cluster Worker Usage"
         self.mode = "lines+markers"
 
-    def create(self, *args):
-        if len(args) == 1 and isinstance(args[0], list):
-            usage_list = args[0]
-        elif len(args) == 2 and isinstance(args[0], list) and isinstance(args[1], list):
-            # If a history_list is included, extend the history_list with the usage_list
-            # and set that combination as the usage_list
-            usage_list = []
+    def create(self, usage_list=None, history_list=None):
+        if history_list is not None:
+            updated_list = []
 
-            for history in args[1]:
+            for history in history_list:
                 history["date"] = datetime.strptime(history["date"], '%Y-%m-%d %H:%M:%S')
-                usage_list.append(history)
+                updated_list.append(history)
 
-            usage_list.extend(args[0])
-        else:
-            raise TypeError("usage_list is required, history_list is optional")
+            updated_list.extend(usage_list)
+            usage_list = updated_list
 
         usage_list_transformed = dict()
 
