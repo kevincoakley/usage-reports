@@ -20,11 +20,12 @@ def readme():
 
 setup(name="databricks-usage-reports-scripts",
       version="0.0.1",
-      description="Create usage report for Databricks service",
+      description="Create usage reports for the Databricks service",
       long_description=readme(),
       author="Kevin Coakley",
       author_email="kcoakley@sdsc.edu",
       scripts=[
+          "bin/databricks-workers",
       ],
       url="",
       packages=[
