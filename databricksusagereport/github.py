@@ -43,12 +43,12 @@ class GitHub:
 
         github_file = None
 
-        for content in directory_contents:
+        for directory_item in directory_contents:
 
-            if content[0] == filename:
-                github_file = content[1]
+            if directory_item[0] == filename:
+                github_file = directory_item[1]
 
         if github_file is None:
-            repo.create_file(path, commit_comment, content)
+            repo.create_file(path, commit_comment, content.encode('utf-8'))
         else:
-            github_file.update(commit_comment, content)
+            github_file.update(commit_comment, content.encode('utf-8'))
