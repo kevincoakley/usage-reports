@@ -12,12 +12,7 @@ class DatabricksUsage:
 
     def get(self):
         r = requests.get('https://dbc-f6057a15-2f8d.cloud.databricks.com:34563/'
-                         'api/1.1/clusters/list', auth=('username', 'password'))
-        print r.status_code
-        print r.headers['content-type']
-        print r.encoding
-        print r.text
-        print r.json()
+                         'api/1.1/clusters/list', auth=(self.username, self.password))
 
         jsonoutput = r.json()
         return_var = []
