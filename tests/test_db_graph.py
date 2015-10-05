@@ -4,7 +4,7 @@ import datetime
 from databricksusagereport.graph.databricks import DatabricksGraph
 
 
-class GraphTestCase(unittest.TestCase):
+class DatabricksGraphTestCase(unittest.TestCase):
 
     def setUp(self):
         self.db_usage_single_file = "tests/graph/databricks_usage_single.js"
@@ -100,12 +100,6 @@ class GraphTestCase(unittest.TestCase):
                                      {"name": "team3",
                                       "numWorkers": 8,
                                       "date": datetime.datetime(2015, 10, 1, 4, 0, 0)}]
-        self.aws_usage = [{"name": "team1",
-                           "Cost": 1.00,
-                           "date": datetime.datetime(2015, 10, 1, 1, 0, 0)},
-                          {"name": "team1",
-                           "Cost": 1.00,
-                           "date": datetime.datetime(2015, 10, 1, 1, 0, 0)}]
 
     def test_databricks_graph_single(self):
         databricks_graph = DatabricksGraph()
