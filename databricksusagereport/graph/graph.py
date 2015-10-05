@@ -16,6 +16,8 @@ class Graph:
         self.logger = logging.getLogger(name)
         self.title = None
         self.type = None
+        self.xaxis = None
+        self.yaxis = None
 
     def populate_template(self, usage_list):
         self.logger.info("Started populate_template")
@@ -49,7 +51,9 @@ class Graph:
 
         filled_template = Graph.databricks_graph_data_template % (graph_data,
                                                                   graph_data_list,
-                                                                  self.title)
+                                                                  self.title,
+                                                                  self.xaxis,
+                                                                  self.yaxis)
         self.logger.debug("filled_template: %s", filled_template)
 
         return filled_template
