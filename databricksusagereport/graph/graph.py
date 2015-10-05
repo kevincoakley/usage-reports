@@ -30,6 +30,12 @@ class Graph:
             y = [y for (x, y) in sorted(zip(value["x"], value["y"]))]
             x = sorted(value["x"])
 
+            # Only return YYYY-MM-DD HH of the datetime
+            def substring(string_input):
+                return str(string_input)[:13]
+
+            x = map(substring, x)
+
             graph_data += Graph.graph_data_template % (key,
                                                        "'%s'" % "', '".join(map(str, x)),
                                                        ', '.join(map(str, y)),
