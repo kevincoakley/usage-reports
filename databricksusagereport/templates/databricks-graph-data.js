@@ -7,10 +7,10 @@ var layout = {
     barmode: 'group',
     showlegend: true,
     "xaxis": {
-        "title": "Date & Hour"
+        "title": "%s"
     },
     "yaxis": {
-        "title": "Workers"
+        "title": "%s"
     },
 };
 
