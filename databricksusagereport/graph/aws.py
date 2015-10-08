@@ -46,4 +46,9 @@ class AWSGraph(Graph):
 
         self.logger.debug("usage_list_transformed: %s", usage_list_transformed)
 
-        return Graph.populate_template(self, usage_list_transformed)
+        clusters = dict()
+
+        for key, value in usage_list_transformed.iteritems():
+            clusters[key] = Graph.populate_template(self, {key: value})
+
+        return clusters
