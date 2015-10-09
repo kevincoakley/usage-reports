@@ -6,7 +6,7 @@ import logging
 import github3
 
 
-class GitHub:
+class StorageGitHub:
 
     user = "kevincoakley"
     repository = "databricks-usage-report"
@@ -24,7 +24,7 @@ class GitHub:
 
         github = github3.login(token=self.token)
 
-        repo = github.repository(GitHub.user, GitHub.repository)
+        repo = github.repository(StorageGitHub.user, StorageGitHub.repository)
 
         directory_contents = repo.directory_contents(directory)
         self.logger.debug("directory_contents: %s", directory_contents)
@@ -44,7 +44,7 @@ class GitHub:
 
         github = github3.login(token=self.token)
 
-        repo = github.repository(GitHub.user, GitHub.repository)
+        repo = github.repository(StorageGitHub.user, StorageGitHub.repository)
 
         directory_contents = repo.directory_contents(directory)
         self.logger.debug("directory_contents: %s", directory_contents)
