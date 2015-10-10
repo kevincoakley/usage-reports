@@ -20,13 +20,14 @@ def readme():
 
 
 setup(name="databricks-usage-reports-scripts",
-      version="0.0.3",
-      description="Create usage reports for the Databricks service",
+      version="0.0.5",
+      description="Create usage and cost reports for the Databricks service",
       long_description=readme(),
       author="Kevin Coakley",
       author_email="kcoakley@sdsc.edu",
       scripts=[
           "bin/databricks-workers",
+          "bin/databricks-aws-cost",
       ],
       url="",
       packages=[
@@ -34,6 +35,7 @@ setup(name="databricks-usage-reports-scripts",
           "databricksusagereport/aws",
           "databricksusagereport/databricks",
           "databricksusagereport/graph",
+          "databricksusagereport/storage",
       ],
       package_data={
           "databricksusagereport": ["templates/databricks-graph-data.js",

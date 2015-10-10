@@ -6,6 +6,7 @@ import logging
 import requests
 from datetime import datetime
 from pkg_resources import resource_string
+import databricksusagereport.arguments
 from databricksusagereport.databricks.usage import DatabricksUsage
 from databricksusagereport.graph.databricks import DatabricksGraph
 from databricksusagereport.storage.storage import Storage
@@ -29,6 +30,8 @@ def main():
 
     logging.info('STARTED: databricks-workers')
 
+    args = databricksusagereport.arguments.parse_arguments()
+
     databricks_username = os.environ.get("DATABRICKS_USERNAME", None)
     databricks_password = os.environ.get("DATABRICKS_PASSWORD", None)
 
@@ -39,7 +42,24 @@ def main():
         logging.debug("databricks_username: %s", databricks_username)
         logging.debug("databricks_password: %s", databricks_password[:3])
 
-    so = Storage()
+    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
+    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
+    github_token = os.environ.get("GITHUB_TOKEN", None)
+
+    if args["aws_storage"] and aws_access_key_id is not None and aws_secret_access_key is not None:
+        logging.info("Using AWS storage")
+        logging.debug("aws_access_key_id: %s", aws_access_key_id)
+        logging.debug("aws_secret_access_key: %s", aws_secret_access_key[:3])
+        so = Storage(aws_access_key_id=aws_access_key_id,
+                     aws_secret_access_key=aws_secret_access_key)
+    elif args["github_storage"] and github_token is not None:
+        logging.info("Using GitHub storage")
+        logging.debug("github_token: %s", github_token[:3])
+        so = Storage(github_token=github_token)
+    else:
+        logging.info("No storage method found, check environment variables")
+        return False
+
     storage = so.get_storage()
 
     if storage is None:
