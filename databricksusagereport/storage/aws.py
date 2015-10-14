@@ -38,4 +38,5 @@ class StorageAWS:
         bucket = s3_conn.get_bucket(StorageAWS.bucket)
         k = Key(bucket)
         k.key = path
+        k.content_type = 'text/html'
         k.set_contents_from_string(content)
