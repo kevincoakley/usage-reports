@@ -36,6 +36,6 @@ class StorageAWS:
                                   aws_secret_access_key=self.aws_secret_access_key)
 
         bucket = s3_conn.get_bucket(StorageAWS.bucket)
-        k = s3_conn.Key(bucket)
+        k = Key(bucket)
         k.key = path
         k.set_contents_from_string(content)
