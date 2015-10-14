@@ -19,7 +19,7 @@ class StorageAWS:
         self.logger.info("Started download")
 
         s3_conn = boto.connect_s3(aws_access_key_id=self.aws_access_key_id,
-                                  aws_secret_access_key=self.logger)
+                                  aws_secret_access_key=self.aws_secret_access_key)
 
         bucket = s3_conn.get_bucket(StorageAWS.bucket)
         k = Key(bucket)
@@ -33,7 +33,7 @@ class StorageAWS:
         self.logger.info("Started upload")
 
         s3_conn = boto.connect_s3(aws_access_key_id=self.aws_access_key_id,
-                                  aws_secret_access_key=self.logger)
+                                  aws_secret_access_key=self.aws_secret_access_key)
 
         k = s3_conn.Key(StorageAWS.bucket)
         k.key = path
