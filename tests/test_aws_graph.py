@@ -5,77 +5,47 @@ from databricksusagereport.graph.aws import AWSGraph
 
 class AWSGraphTestCase(unittest.TestCase):
 
+    maxDiff = None
+
     def setUp(self):
         self.aws_usage_single_file = ["tests/graph/aws_usage_single.js"]
-        self.aws_usage_single = [{"name": "team1",
-                                  "cost": 1.00,
-                                  "date": datetime.datetime(2015, 10, 1, 1, 0, 0)},
-                                 {"name": "team1",
-                                  "cost": 1.25,
-                                  "date": datetime.datetime(2015, 10, 1, 2, 0, 0)},
-                                 {"name": "team1",
-                                  "cost": .75,
-                                  "date": datetime.datetime(2015, 10, 1, 3, 0, 0)},
-                                 {"name": "team1",
-                                  "cost": .50,
-                                  "date": datetime.datetime(2015, 10, 2, 1, 0, 0)},
-                                 {"name": "team1",
-                                  "cost": .50,
-                                  "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                                 {"name": "team1",
-                                  "cost": .33,
-                                  "date": datetime.datetime(2015, 10, 1, 4, 0, 0)},
-                                 {"name": "team1",
-                                  "cost": 1.25,
-                                  "date": datetime.datetime(2015, 10, 3, 1, 0, 0)}]
+        self.aws_usage_single = {"team1":
+                                 {"date": [datetime.datetime(2015, 10, 1, 1, 0, 0),
+                                           datetime.datetime(2015, 10, 1, 2, 0, 0),
+                                           datetime.datetime(2015, 10, 1, 3, 0, 0),
+                                           datetime.datetime(2015, 10, 2, 1, 0, 0),
+                                           datetime.datetime(2015, 10, 3, 1, 0, 0),
+                                           datetime.datetime(2015, 10, 1, 4, 0, 0),
+                                           datetime.datetime(2015, 10, 3, 1, 0, 0)],
+                                  "cost": [1.00, 1.25, .75, .50, .50, .33, 1.25]}
+                                 }
+
         self.aws_usage_multiple_file = ["tests/graph/aws_usage_multiple_1.js",
                                         "tests/graph/aws_usage_multiple_2.js",
                                         "tests/graph/aws_usage_multiple_3.js"]
-        self.aws_usage_multiple = [{"name": "team1",
-                                    "cost": 3.00,
-                                    "date": datetime.datetime(2015, 10, 1, 1, 0, 0)},
-                                   {"name": "team1",
-                                    "cost": 0.33,
-                                    "date": datetime.datetime(2015, 10, 1, 2, 0, 0)},
-                                   {"name": "team1",
-                                    "cost": 0.50,
-                                    "date": datetime.datetime(2015, 10, 2, 1, 0, 0)},
-                                   {"name": "team1",
-                                    "cost": 1.50,
-                                    "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                                   {"name": "team3",
-                                    "cost": 2.00,
-                                    "date": datetime.datetime(2015, 10, 3, 3, 0, 0)},
-                                   {"name": "team2",
-                                    "cost": 2.50,
-                                    "date": datetime.datetime(2015, 10, 1, 4, 0, 0)},
-                                   {"name": "team2",
-                                    "cost": 2.50,
-                                    "date": datetime.datetime(2015, 10, 1, 5, 0, 0)},
-                                   {"name": "team2",
-                                    "cost": 0.50,
-                                    "date": datetime.datetime(2015, 10, 2, 1, 0, 0)},
-                                   {"name": "team2",
-                                    "cost": 1.50,
-                                    "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                                   {"name": "team3",
-                                    "cost": 2.25,
-                                    "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                                   {"name": "team2",
-                                    "cost": 0.75,
-                                    "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                                   {"name": "team3",
-                                    "cost": 0.12,
-                                    "date": datetime.datetime(2015, 10, 1, 1, 0, 0)},
-                                   {"name": "team3",
-                                    "cost": 0.13,
-                                    "date": datetime.datetime(2015, 10, 1, 2, 0, 0)},
-                                   {"name": "team3",
-                                    "cost": 1.50,
-                                    "date": datetime.datetime(2015, 10, 2, 5, 0, 0)},
-                                   {"name": "team1",
-                                    "cost": 0.25,
-                                    "date": datetime.datetime(2015, 10, 3, 3, 0, 0)}]
+
+        self.aws_usage_multiple = {"team1":
+                                   {"date": [datetime.datetime(2015, 10, 1, 1, 0, 0),
+                                             datetime.datetime(2015, 10, 1, 2, 0, 0),
+                                             datetime.datetime(2015, 10, 2, 1, 0, 0),
+                                             datetime.datetime(2015, 10, 3, 1, 0, 0),
+                                             datetime.datetime(2015, 10, 3, 3, 0, 0)],
+                                    "cost": [3.00, 0.33, 0.50, 1.50, 0.25]},
+                                   "team2":
+                                       {"date": [datetime.datetime(2015, 10, 1, 4, 0, 0),
+                                                 datetime.datetime(2015, 10, 1, 5, 0, 0),
+                                                 datetime.datetime(2015, 10, 2, 1, 0, 0),
+                                                 datetime.datetime(2015, 10, 3, 1, 0, 0),
+                                                 datetime.datetime(2015, 10, 3, 1, 0, 0)],
+                                        "cost": [2.50, 2.50, 0.50, 1.50, 0.75]},
+                                   "team3":
+                                       {"date": [datetime.datetime(2015, 10, 3, 3, 0, 0),
+                                                 datetime.datetime(2015, 10, 3, 1, 0, 0),
+                                                 datetime.datetime(2015, 10, 1, 1, 0, 0),
+                                                 datetime.datetime(2015, 10, 1, 2, 0, 0),
+                                                 datetime.datetime(2015, 10, 2, 5, 0, 0)],
+                                        "cost": [2.00, 2.25, 0.12, 0.13, 1.50]},
+                                   }
 
     def test_aws_graph_single(self):
         aws_graph = AWSGraph()

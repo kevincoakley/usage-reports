@@ -23,26 +23,29 @@ class AWSGraph(Graph):
 
         usage_list_transformed = dict()
 
-        for usage in usage_list:
+        for key, value in usage_list.iteritems():
             # We only want letters and numbers in the name
-            name = re.sub("[^A-Za-z0-9]", "_", usage["name"])
+            name = re.sub("[^A-Za-z0-9]", "_", key)
 
-            # Cluster is not in usage_list_transformed
-            if name not in usage_list_transformed.keys():
-                usage_list_transformed[name] = {"x": [usage["date"].date()],
-                                                "y": ["{0:.02f}".format(usage["cost"])]}
+            x_axis = []
+            y_axis = []
 
-            # Cluster and date are in usage_list_transformed
-            elif name in usage_list_transformed.keys() and \
-                    usage["date"].date() in usage_list_transformed[name]["x"]:
-                date_index = usage_list_transformed[name]['x'].index(usage["date"].date())
-                date_cost = float(usage_list_transformed[name]["y"][date_index]) + usage["cost"]
-                usage_list_transformed[name]["y"][date_index] = "{0:.02f}".format(date_cost)
+            count = 0
 
-            # Cluster is in usage_list_transformed but date is not
-            else:
-                usage_list_transformed[name]["x"].append(usage["date"].date())
-                usage_list_transformed[name]["y"].append("{0:.02f}".format(usage["cost"]))
+            # Sum hourly cost to create a daily total
+            for date in value["date"]:
+                if date.date() in x_axis:
+                    x_axis_date_index = x_axis.index(date.date())
+                    date_cost = float(y_axis[x_axis_date_index]) + float(value["cost"][count])
+                    y_axis[x_axis_date_index] = "{0:.02f}".format(date_cost)
+                else:
+                    x_axis.append(date.date())
+                    y_axis.append("{0:.02f}".format(value["cost"][count]))
+
+                count += 1
+
+            usage_list_transformed[name] = {"x": x_axis,
+                                            "y": y_axis}
 
         self.logger.debug("usage_list_transformed: %s", usage_list_transformed)
 
