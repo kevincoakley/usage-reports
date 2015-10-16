@@ -14,4 +14,8 @@ def parse_arguments():
                               dest="aws_storage",
                               action='store_true')
 
+    parser.add_argument('--debug',
+                        dest="debug",
+                        action='store_true')
+
     return vars(parser.parse_args())
