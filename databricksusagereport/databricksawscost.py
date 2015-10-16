@@ -11,13 +11,18 @@ from databricksusagereport.graph.aws import AWSGraph
 
 
 def main():
-    logging.basicConfig(level=logging.INFO,
+    args = databricksusagereport.arguments.parse_arguments()
+
+    if args["debug"] is True:
+        log_level = logging.DEBUG
+    else:
+        log_level = logging.INFO
+
+    logging.basicConfig(level=log_level,
                         format='%(asctime)s %(name)s %(levelname)s %(message)s',
                         handlers=[logging.StreamHandler()])
 
     logging.info('STARTED: databricks-aws-cost')
-
-    args = databricksusagereport.arguments.parse_arguments()
 
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
