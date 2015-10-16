@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import datetime
+import re
+import csv
 
 
 class AwsUsage:
@@ -9,50 +11,44 @@ class AwsUsage:
         self.access_key_id = access_key_id
         self.secret_access_key = secret_access_key
 
-    @staticmethod
-    def get():
-        return [{"name": "team1",
-                 "cost": 3.00,
-                 "date": datetime.datetime(2015, 10, 1, 1, 0, 0)},
-                {"name": "team1",
-                 "cost": 0.33,
-                 "date": datetime.datetime(2015, 10, 1, 2, 0, 0)},
-                {"name": "team1",
-                 "cost": 0.50,
-                 "date": datetime.datetime(2015, 10, 2, 1, 0, 0)},
-                {"name": "team1",
-                 "cost": 1.50,
-                 "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                {"name": "team3",
-                 "cost": 2.00,
-                 "date": datetime.datetime(2015, 10, 3, 3, 0, 0)},
-                {"name": "team2",
-                 "cost": 2.50,
-                 "date": datetime.datetime(2015, 10, 1, 4, 0, 0)},
-                {"name": "team2",
-                 "cost": 2.50,
-                 "date": datetime.datetime(2015, 10, 1, 5, 0, 0)},
-                {"name": "team2",
-                 "cost": 0.50,
-                 "date": datetime.datetime(2015, 10, 2, 1, 0, 0)},
-                {"name": "team2",
-                 "cost": 1.50,
-                 "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                {"name": "team3",
-                 "cost": 2.25,
-                 "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                {"name": "team2",
-                 "cost": 0.75,
-                 "date": datetime.datetime(2015, 10, 3, 1, 0, 0)},
-                {"name": "team3",
-                 "cost": 0.12,
-                 "date": datetime.datetime(2015, 10, 1, 1, 0, 0)},
-                {"name": "team3",
-                 "cost": 0.13,
-                 "date": datetime.datetime(2015, 10, 1, 2, 0, 0)},
-                {"name": "team3",
-                 "cost": 1.50,
-                 "date": datetime.datetime(2015, 10, 2, 5, 0, 0)},
-                {"name": "team1",
-                 "cost": 0.25,
-                 "date": datetime.datetime(2015, 10, 3, 3, 0, 0)}]
+    def get(self, csv_file):
+        with open(csv_file) as f:
+            reader = csv.DictReader(f)
+            return_dict = dict()
+
+            for row in reader:
+                if row['user:Cluster'] is not "":
+                    name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
+
+                    # Cluster is not in return_dict
+                    if name not in return_dict.keys():
+                        return_dict[name] = {"date": [datetime.datetime.
+                                                      strptime(row['UsageStartDate'][:7],
+                                                               '%m/%d/%y')],
+                                             "cost": [float("{0:.02f}".format(float(row["Cost"])))]}
+
+                    # Cluster and date are in return_dict
+                    elif name in return_dict.keys() and \
+                        datetime.datetime.strptime(row['UsageStartDate']
+                                                   [:7], '%m/%d/%y') in return_dict[name]["date"]:
+
+                        date_index = return_dict[name]['date'].\
+                            index(datetime.datetime.strptime(row['UsageStartDate'][:7],
+                                                             '%m/%d/%y'))
+
+                        date_cost = float(return_dict[name]["cost"]
+                                          [date_index]) + float(row["Cost"])
+
+                        return_dict[name]["cost"][date_index] = float("{0:.02f}".format
+                                                                      (float(date_cost)))
+
+                    # Cluster is in return_dict but date is not
+                    else:
+                        return_dict[name]["date"].append(datetime.datetime.
+                                                         strptime(row['UsageStartDate'][:7],
+                                                                  '%m/%d/%y'))
+
+                        return_dict[name]["cost"].append(float("{0:.02f}".format
+                                                               (float(row["Cost"]))))
+
+        return return_dict
