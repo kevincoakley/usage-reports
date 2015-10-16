@@ -20,7 +20,7 @@ def readme():
 
 
 setup(name="databricks-usage-reports-scripts",
-      version="0.0.5",
+      version="0.0.6",
       description="Create usage and cost reports for the Databricks service",
       long_description=readme(),
       author="Kevin Coakley",

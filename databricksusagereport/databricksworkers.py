@@ -24,13 +24,18 @@ def transform_history_dict(history_dict):
 
 
 def main():
-    logging.basicConfig(level=logging.INFO,
+    args = databricksusagereport.arguments.parse_arguments()
+
+    if args["debug"] is True:
+        log_level = logging.DEBUG
+    else:
+        log_level = logging.INFO
+
+    logging.basicConfig(level=log_level,
                         format='%(asctime)s %(name)s %(levelname)s %(message)s',
                         handlers=[logging.StreamHandler()])
 
     logging.info('STARTED: databricks-workers')
-
-    args = databricksusagereport.arguments.parse_arguments()
 
     databricks_username = os.environ.get("DATABRICKS_USERNAME", None)
     databricks_password = os.environ.get("DATABRICKS_PASSWORD", None)
