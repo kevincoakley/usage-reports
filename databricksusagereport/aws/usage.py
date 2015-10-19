@@ -1,19 +1,50 @@
 #!/usr/bin/env python
 
-import datetime
 import re
 import csv
+import boto
+import zipfile
 import StringIO
+import datetime
+from boto.s3.key import Key
 
 
 class AwsUsage:
 
-    def __init__(self, access_key_id, secret_access_key):
-        self.access_key_id = access_key_id
-        self.secret_access_key = secret_access_key
+    bucket = "dse-billing"
+    path_base = "846273844940-aws-billing-detailed-line-items-with-resources-and-tags"
 
-    def parse(self, csv_file_string):
-        buf = StringIO.StringIO(csv_file_string)
+    def __init__(self, access_key_id, secret_access_key):
+        self.aws_access_key_id = access_key_id
+        self.aws_secret_access_key = secret_access_key
+
+    def get(self):
+        s3_conn = boto.connect_s3(aws_access_key_id=self.aws_access_key_id,
+                                  aws_secret_access_key=self.aws_secret_access_key)
+
+        path = "%s-%s-%s.csv.zip" % \
+               (AwsUsage.path_base,
+                datetime.datetime.now().strftime("%Y"),
+                datetime.datetime.now().strftime("%m"))
+
+        bucket = s3_conn.get_bucket(AwsUsage.bucket)
+
+        k = Key(bucket)
+        k.key = path
+        if k.exists():
+            f = StringIO.StringIO()
+            k.get_file(f)
+            f.seek(0)
+            gzf = zipfile.ZipFile(f, "r")
+            if path[:-4] in gzf.namelist():
+                file_content = gzf.read(path[:-4])
+                return AwsUsage.parse(file_content)
+        else:
+            return None
+
+    @staticmethod
+    def parse(csv_string):
+        buf = StringIO.StringIO(csv_string)
         line = csv.DictReader(buf, delimiter=',')
 
         return_dict = dict()
