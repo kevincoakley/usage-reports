@@ -42,44 +42,46 @@ class AwsUsage:
         else:
             return None
 
-    def parse(self, csv_file):
-        with open(csv_file) as f:
-            reader = csv.DictReader(f)
-            return_dict = dict()
+    @staticmethod
+    def parse(csv_string):
+        buf = StringIO.StringIO(csv_string)
+        line = csv.DictReader(buf, delimiter=',')
 
-            for row in reader:
-                if row['user:Cluster'] is not "":
-                    name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
+        return_dict = dict()
 
-                    # Cluster is not in return_dict
-                    if name not in return_dict.keys():
-                        return_dict[name] = {"date": [datetime.datetime.
-                                                      strptime(row['UsageStartDate'][:7],
-                                                               '%m/%d/%y')],
-                                             "cost": [float("{0:.02f}".format(float(row["Cost"])))]}
+        for row in line:
+            if row['user:Cluster'] is not "":
+                name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
 
-                    # Cluster and date are in return_dict
-                    elif name in return_dict.keys() and \
-                        datetime.datetime.strptime(row['UsageStartDate']
-                                                   [:7], '%m/%d/%y') in return_dict[name]["date"]:
+                # Cluster is not in return_dict
+                if name not in return_dict.keys():
+                    return_dict[name] = {"date": [datetime.datetime.
+                                                  strptime(row['UsageStartDate'][:7],
+                                                           '%m/%d/%y')],
+                                         "cost": [float("{0:.02f}".format(float(row["Cost"])))]}
 
-                        date_index = return_dict[name]['date'].\
-                            index(datetime.datetime.strptime(row['UsageStartDate'][:7],
-                                                             '%m/%d/%y'))
+                # Cluster and date are in return_dict
+                elif name in return_dict.keys() and \
+                    datetime.datetime.strptime(row['UsageStartDate']
+                                               [:7], '%m/%d/%y') in return_dict[name]["date"]:
 
-                        date_cost = float(return_dict[name]["cost"]
-                                          [date_index]) + float(row["Cost"])
+                    date_index = return_dict[name]['date'].\
+                        index(datetime.datetime.strptime(row['UsageStartDate'][:7],
+                                                         '%m/%d/%y'))
 
-                        return_dict[name]["cost"][date_index] = float("{0:.02f}".format
-                                                                      (float(date_cost)))
+                    date_cost = float(return_dict[name]["cost"]
+                                      [date_index]) + float(row["Cost"])
 
-                    # Cluster is in return_dict but date is not
-                    else:
-                        return_dict[name]["date"].append(datetime.datetime.
-                                                         strptime(row['UsageStartDate'][:7],
-                                                                  '%m/%d/%y'))
+                    return_dict[name]["cost"][date_index] = float("{0:.02f}".format
+                                                                  (float(date_cost)))
 
-                        return_dict[name]["cost"].append(float("{0:.02f}".format
-                                                               (float(row["Cost"]))))
+                # Cluster is in return_dict but date is not
+                else:
+                    return_dict[name]["date"].append(datetime.datetime.
+                                                     strptime(row['UsageStartDate'][:7],
+                                                              '%m/%d/%y'))
+
+                    return_dict[name]["cost"].append(float("{0:.02f}".format
+                                                           (float(row["Cost"]))))
 
         return return_dict
