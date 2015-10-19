@@ -38,7 +38,7 @@ class AwsUsage:
             gzf = zipfile.ZipFile(f, "r")
             if path[:-4] in gzf.namelist():
                 file_content = gzf.read(path[:-4])
-                return AwsUsage.path_base(file_content)
+                return AwsUsage.parse(file_content)
         else:
             return None
 
