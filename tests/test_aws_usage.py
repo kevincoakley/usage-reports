@@ -1,6 +1,6 @@
 import unittest
 import datetime
-from databricksusagereport.aws.usage import AwsUsage
+from databricksusagereport.usage.aws import AwsUsage
 
 
 class AWSUsageTestCase(unittest.TestCase):

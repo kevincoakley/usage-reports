@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from pkg_resources import resource_string
 import databricksusagereport.arguments
-from databricksusagereport.aws.usage import AwsUsage
+from databricksusagereport.usage.aws import AwsUsage
 from databricksusagereport.storage.storage import Storage
 from databricksusagereport.graph.aws import AWSGraph
 

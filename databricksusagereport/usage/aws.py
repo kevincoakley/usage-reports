@@ -45,7 +45,7 @@ class AwsUsage:
             if path[:-4] in zip_file.namelist():
                 self.logger.info("CSV file found zipfile: %s", path[:-4])
                 file_content = zip_file.read(path[:-4])
-                return AwsUsage.parse(file_content)
+                return AwsUsage.parse(self, file_content)
         else:
             self.logger.info("Key does not exist on AWS: %s", path)
             return None
