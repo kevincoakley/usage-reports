@@ -63,7 +63,7 @@ class AwsUsage:
 
                 # Cluster is not in aws_usage_dict
                 if name not in aws_usage_dict.keys():
-                    self.logger.info("Cluster %s not in aws_usage_dict", name)
+                    self.logger.debug("Cluster %s not in aws_usage_dict", name)
                     aws_usage_dict[name] = {"date": [datetime.datetime.
                                                      strptime(row['UsageStartDate'][:10],
                                                               '%Y-%m-%d')],
@@ -73,9 +73,9 @@ class AwsUsage:
                 elif name in aws_usage_dict.keys() and \
                     datetime.datetime.strptime(row['UsageStartDate']
                                                [:10], '%Y-%m-%d') in aws_usage_dict[name]["date"]:
-                    self.logger.info("Cluster %s and %s in aws_usage_dict", name,
-                                     datetime.datetime.strptime(row['UsageStartDate']
-                                                                [:10], '%Y-%m-%d'))
+                    self.logger.debug("Cluster %s and %s in aws_usage_dict", name,
+                                      datetime.datetime.strptime(row['UsageStartDate']
+                                                                 [:10], '%Y-%m-%d'))
                     date_index = aws_usage_dict[name]['date'].\
                         index(datetime.datetime.strptime(row['UsageStartDate'][:10],
                                                          '%Y-%m-%d'))
@@ -86,9 +86,10 @@ class AwsUsage:
 
                 # Cluster is in aws_usage_dict but date is not
                 else:
-                    self.logger.info("Cluster %s is in aws_usage_dict but the date %s is not", name,
-                                     datetime.datetime.strptime(row['UsageStartDate']
-                                                                [:10], '%Y-%m-%d'))
+                    self.logger.debug("Cluster %s is in aws_usage_dict but the date %s is not",
+                                      name,
+                                      datetime.datetime.strptime(row['UsageStartDate']
+                                                                 [:10], '%Y-%m-%d'))
                     aws_usage_dict[name]["date"].append(datetime.datetime.
                                                         strptime(row['UsageStartDate'][:10],
                                                                  '%Y-%m-%d'))
