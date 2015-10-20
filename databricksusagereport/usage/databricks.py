@@ -19,16 +19,16 @@ class DatabricksUsage:
         r = requests.get('https://dbc-f6057a15-2f8d.cloud.databricks.com:34563/'
                          'api/1.1/clusters/list', auth=(self.username, self.password))
 
-        jsonoutput = r.json()
+        json_output = r.json()
 
-        self.logger.info("jsonoutput: %s", jsonoutput)
+        self.logger.info("jsonoutput: %s", json_output)
 
-        return_var = []
-        for server in jsonoutput:
+        databricks_usage_list = []
+        for server in json_output:
             d = {'name': server['name'], 'numWorkers': server['numWorkers'],
                  'date': datetime.datetime.now()}
-            return_var.append(d)
+            databricks_usage_list.append(d)
 
-        self.logger.debug("return_var: %s", return_var)
+        self.logger.debug("return_var: %s", databricks_usage_list)
 
-        return return_var
+        return databricks_usage_list

@@ -7,7 +7,7 @@ import requests
 from datetime import datetime
 from pkg_resources import resource_string
 import databricksusagereport.arguments
-from databricksusagereport.databricks.usage import DatabricksUsage
+from databricksusagereport.usage.databricks import DatabricksUsage
 from databricksusagereport.graph.databricks import DatabricksGraph
 from databricksusagereport.storage.storage import Storage
 
