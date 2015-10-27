@@ -3,6 +3,7 @@
 import logging
 import boto
 from boto.s3.key import Key
+from pkg_resources import resource_string
 
 
 class StorageAWS:
@@ -40,3 +41,23 @@ class StorageAWS:
         k.key = path
         k.content_type = 'text/html'
         k.set_contents_from_string(content)
+
+    def upload_index(self, path):
+        self.logger.info("Upload file")
+
+        data_bricks_usage_file = resource_string("databricksusagereport",
+                                                 "html/aws/index.html")
+
+        r = []
+        aws_path = path.split("/")
+        for index, dirs in enumerate(aws_path):
+            if index == 0:
+                r.append(aws_path[index])
+
+            else:
+                r.append("%s/%s" % (r[index - 1], aws_path[index]))
+
+        for directory in r:
+            download = self.download("%s/index.html" % directory)
+            if download is None:
+                self.upload("%s/index.html" % directory, data_bricks_usage_file)
