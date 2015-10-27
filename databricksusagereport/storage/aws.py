@@ -55,7 +55,7 @@ class StorageAWS:
                 r.append(aws_path[index])
 
             else:
-                r.append("%s/%s" % (r[index-1], aws_path[index]))
+                r.append("%s/%s" % (r[index - 1], aws_path[index]))
 
         for directory in r:
             download = self.download("%s/index.html" % directory)
