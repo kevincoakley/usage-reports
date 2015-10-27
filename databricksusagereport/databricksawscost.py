@@ -66,6 +66,7 @@ def main():
                                                        datetime.now().strftime("%Y"),
                                                        datetime.now().strftime("%m"))
         logging.info("Upload directory: %s", upload_directory)
+        storage.upload_index(upload_directory)
 
         # Upload index.html
         index_html = resource_string("databricksusagereport", "html/index.html")
