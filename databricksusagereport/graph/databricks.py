@@ -14,7 +14,7 @@ class DatabricksGraph(Graph):
         self.logger = logging.getLogger(name)
         self.title = "Cluster Worker Usage"
         self.type = "bar"
-        self.xaxis = "Date & Hour"
+        self.xaxis = "Date & Hour (Pacific Time Zone)"
         self.yaxis = "Workers"
 
     def create(self, usage_list=None, history_list=None):

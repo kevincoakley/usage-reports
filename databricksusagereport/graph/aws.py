@@ -13,7 +13,7 @@ class AWSGraph(Graph):
         self.logger = logging.getLogger(name)
         self.title = "AWS Cluster Cost"
         self.type = "bar"
-        self.xaxis = "Date"
+        self.xaxis = "Date (UTC)"
         self.yaxis = "Cost"
 
     def create(self, usage_list=None):

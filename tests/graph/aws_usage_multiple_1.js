@@ -14,7 +14,7 @@ var layout = {
     barmode: 'group',
     showlegend: true,
     "xaxis": {
-        "title": "Date"
+        "title": "Date (UTC)"
     },
     "yaxis": {
         "title": "Cost"
