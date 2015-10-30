@@ -11,9 +11,9 @@ class AWSGraph(Graph):
         Graph.__init__(self)
         name = '.'.join([__name__, self.__class__.__name__])
         self.logger = logging.getLogger(name)
-        self.title = "AWS Cluster Cost"
+        self.title = "AWS Cluster Cost (delayed by 12 hours)"
         self.type = "bar"
-        self.xaxis = "Date"
+        self.xaxis = "Date (UTC)"
         self.yaxis = "Cost"
 
     def create(self, usage_list=None):

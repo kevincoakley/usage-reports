@@ -19,8 +19,8 @@ def readme():
         return f.read()
 
 
-setup(name="databricks-usage-reports-scripts",
-      version="0.1.0",
+setup(name="databricks-usage-report-scripts",
+      version="0.1.1",
       description="Create usage and cost reports for the Databricks service",
       long_description=readme(),
       author="Kevin Coakley",

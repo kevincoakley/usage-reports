@@ -10,11 +10,11 @@ var team2 = {
 var data = [ team2 ];
 
 var layout = {
-    title:'AWS Cluster Cost',
+    title:'AWS Cluster Cost (delayed by 12 hours)',
     barmode: 'group',
     showlegend: true,
     "xaxis": {
-        "title": "Date"
+        "title": "Date (UTC)"
     },
     "yaxis": {
         "title": "Cost"

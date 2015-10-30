@@ -65,8 +65,11 @@ def main():
         upload_directory = "clusters/cost/%s/%s/%s" % (key,
                                                        datetime.now().strftime("%Y"),
                                                        datetime.now().strftime("%m"))
+        if args["aws_storage"]:
+            logging.info("Uploading indexes to AWS: %s", upload_directory)
+            storage.upload_index(upload_directory)
+
         logging.info("Upload directory: %s", upload_directory)
-        storage.upload_index(upload_directory)
 
         # Upload index.html
         index_html = resource_string("databricksusagereport", "html/index.html")
