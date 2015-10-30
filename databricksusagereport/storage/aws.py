@@ -26,8 +26,10 @@ class StorageAWS:
         k = Key(bucket)
         k.key = path
         if k.exists():
+            self.logger.debug("AWS key exists: %s", path)
             return k.get_contents_as_string()
         else:
+            self.logger.debug("AWS key does not exist: %s", path)
             return None
 
     def upload(self, path, content):
@@ -43,21 +45,25 @@ class StorageAWS:
         k.set_contents_from_string(content)
 
     def upload_index(self, path):
-        self.logger.info("Upload file")
+        self.logger.info("Upload index file")
 
         data_bricks_usage_file = resource_string("databricksusagereport",
                                                  "html/aws/index.html")
 
-        r = []
-        aws_path = path.split("/")
-        for index, dirs in enumerate(aws_path):
+        aws_paths = []
+        split_path = path.split("/")
+        for index, dirs in enumerate(split_path):
             if index == 0:
-                r.append(aws_path[index])
+                aws_paths.append(split_path[index])
 
             else:
-                r.append("%s/%s" % (r[index - 1], aws_path[index]))
+                aws_paths.append("%s/%s" % (aws_paths[index - 1], split_path[index]))
 
-        for directory in r:
+        self.logger.debug("AWS Paths: ", aws_paths)
+
+        for directory in aws_paths:
             download = self.download("%s/index.html" % directory)
+
             if download is None:
+                self.logger.info("Uploading index: %s/index.html", directory)
                 self.upload("%s/index.html" % directory, data_bricks_usage_file)
