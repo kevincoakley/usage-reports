@@ -26,7 +26,6 @@ def main():
 
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-    github_token = os.environ.get("GITHUB_TOKEN", None)
 
     if aws_access_key_id is None or aws_secret_access_key is None:
         logging.info("Missing aws_access_key_id and aws_secret_access_key")
@@ -39,10 +38,6 @@ def main():
         logging.info("Using AWS storage")
         so = Storage(aws_access_key_id=aws_access_key_id,
                      aws_secret_access_key=aws_secret_access_key)
-    elif args["github_storage"] and github_token is not None:
-        logging.info("Using GitHub storage")
-        logging.debug("github_token: %s", github_token[:3])
-        so = Storage(github_token=github_token)
     else:
         logging.info("No storage method found, check environment variables")
         return False
