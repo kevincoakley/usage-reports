@@ -3,13 +3,13 @@
 import os
 import json
 import logging
+import argparse
 import requests
 from datetime import datetime
 from pkg_resources import resource_string
-import databricksusagereport.arguments
 from databricksusagereport.usage.databricks import DatabricksUsage
 from databricksusagereport.graph.databricks import DatabricksGraph
-from databricksusagereport.storage.storage import Storage
+from databricksusagereport.storage.aws import StorageAWS
 
 
 def transform_history_dict(history_dict):
@@ -24,8 +24,13 @@ def transform_history_dict(history_dict):
 
 
 def main():
-    args = databricksusagereport.arguments.parse_arguments()
+    parser = argparse.ArgumentParser()
 
+    parser.add_argument('--debug',
+                        dest="debug",
+                        action='store_true')
+
+    args = vars(parser.parse_args())
     if args["debug"] is True:
         log_level = logging.DEBUG
     else:
@@ -49,25 +54,14 @@ def main():
 
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-    github_token = os.environ.get("GITHUB_TOKEN", None)
 
-    if args["aws_storage"] and aws_access_key_id is not None and aws_secret_access_key is not None:
+    if aws_access_key_id is not None and aws_secret_access_key is not None:
         logging.info("Using AWS storage")
         logging.debug("aws_access_key_id: %s", aws_access_key_id)
         logging.debug("aws_secret_access_key: %s", aws_secret_access_key[:3])
-        so = Storage(aws_access_key_id=aws_access_key_id,
-                     aws_secret_access_key=aws_secret_access_key)
-    elif args["github_storage"] and github_token is not None:
-        logging.info("Using GitHub storage")
-        logging.debug("github_token: %s", github_token[:3])
-        so = Storage(github_token=github_token)
+        storage = StorageAWS(aws_access_key_id, aws_secret_access_key)
     else:
         logging.info("No storage method found, check environment variables")
-        return False
-
-    storage = so.get_storage()
-
-    if storage is None:
         return False
 
     # Construct the upload_directory based on the year and week of the year

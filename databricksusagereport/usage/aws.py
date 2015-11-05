@@ -12,27 +12,32 @@ from boto.s3.key import Key
 
 class AwsUsage:
 
-    bucket = "dse-billing"
-    path_base = "846273844940-aws-billing-detailed-line-items-with-resources-and-tags"
-
     def __init__(self, access_key_id, secret_access_key):
         name = '.'.join([__name__, self.__class__.__name__])
         self.logger = logging.getLogger(name)
         self.aws_access_key_id = access_key_id
         self.aws_secret_access_key = secret_access_key
 
-    def get(self):
+    def get_current(self, bucket_name):
+        self.logger.info("Started get_current")
+
+        path_base = "846273844940-aws-billing-detailed-line-items-with-resources-and-tags"
+
+        path = "%s-%s-%s.csv.zip" % (path_base,
+                                     datetime.datetime.now().strftime("%Y"),
+                                     datetime.datetime.now().strftime("%m"))
+
+        return AwsUsage.get(self, bucket_name, path)
+
+    def get(self, bucket_name, path):
         self.logger.info("Started get")
         s3_conn = boto.connect_s3(aws_access_key_id=self.aws_access_key_id,
                                   aws_secret_access_key=self.aws_secret_access_key)
 
-        path = "%s-%s-%s.csv.zip" % (AwsUsage.path_base,
-                                     datetime.datetime.now().strftime("%Y"),
-                                     datetime.datetime.now().strftime("%m"))
         self.logger.info("AWS log path: %s", path)
 
-        bucket = s3_conn.get_bucket(AwsUsage.bucket)
-        self.logger.info("AWS bucket: %s", AwsUsage.bucket)
+        bucket = s3_conn.get_bucket(bucket_name)
+        self.logger.info("AWS bucket: %s", bucket_name)
 
         k = Key(bucket)
         k.key = path
