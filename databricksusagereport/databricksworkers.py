@@ -9,7 +9,7 @@ from datetime import datetime
 from pkg_resources import resource_string
 from databricksusagereport.usage.databricks import DatabricksUsage
 from databricksusagereport.graph.databricks import DatabricksGraph
-from databricksusagereport.storage.storage import Storage
+from databricksusagereport.storage.aws import StorageAWS
 
 
 def transform_history_dict(history_dict):
@@ -59,15 +59,9 @@ def main():
         logging.info("Using AWS storage")
         logging.debug("aws_access_key_id: %s", aws_access_key_id)
         logging.debug("aws_secret_access_key: %s", aws_secret_access_key[:3])
-        so = Storage(aws_access_key_id=aws_access_key_id,
-                     aws_secret_access_key=aws_secret_access_key)
+        storage = StorageAWS(aws_access_key_id, aws_secret_access_key)
     else:
         logging.info("No storage method found, check environment variables")
-        return False
-
-    storage = so.get_storage()
-
-    if storage is None:
         return False
 
     # Construct the upload_directory based on the year and week of the year

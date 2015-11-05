@@ -7,7 +7,7 @@ import argparse
 from datetime import datetime
 from pkg_resources import resource_string
 from databricksusagereport.usage.aws import AwsUsage
-from databricksusagereport.storage.storage import Storage
+from databricksusagereport.storage.aws import StorageAWS
 from databricksusagereport.graph.aws import AWSGraph
 
 
@@ -65,13 +65,8 @@ def main(bucket=None, path=None):
         logging.debug("aws_secret_access_key: %s", aws_secret_access_key[:3])
 
     logging.info("Using AWS storage")
-    so = Storage(aws_access_key_id=aws_access_key_id,
-                 aws_secret_access_key=aws_secret_access_key)
 
-    storage = so.get_storage()
-
-    if storage is None:
-        return False
+    storage = StorageAWS(aws_access_key_id, aws_secret_access_key)
 
     aws_usage = AwsUsage(aws_access_key_id, aws_secret_access_key)
     logging.info("Downloading and parsing the latest AWS detailed billing report")
