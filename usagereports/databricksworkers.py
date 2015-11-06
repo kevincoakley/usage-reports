@@ -70,7 +70,7 @@ def main(save_bucket, log_level=logging.INFO):
 
     # Construct the upload_directory based on the year and week of the year
     upload_directory = "databricks/workers/%s/%s" % (datetime.now().strftime("%Y"),
-                                                              datetime.now().strftime("%W"))
+                                                     datetime.now().strftime("%W"))
     logging.info("Upload directory: %s", upload_directory)
 
     databricks_usage = DatabricksWorkersUsage(databricks_username, databricks_password)
