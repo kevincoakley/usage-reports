@@ -2,7 +2,7 @@
 
 import sys
 
-from databricksusagereport.databricksawscost import main
+from databricksusagereport.databricksawscost import shell
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(shell())
