@@ -53,7 +53,7 @@ def main(save_bucket, report_bucket, path, log_level=logging.INFO):
                         format='%(asctime)s %(name)s %(levelname)s %(message)s',
                         handlers=[logging.StreamHandler()])
 
-    logging.info('STARTED: databricks-aws-cost')
+    logging.info('STARTED: aws-tags-cost')
 
     logging.debug("save_bucket: %s, report_bucket: %s, path: %s", save_bucket, report_bucket, path)
 
@@ -93,10 +93,10 @@ def main(save_bucket, report_bucket, path, log_level=logging.INFO):
         logging.info("Upload directory: %s / %s", save_bucket, upload_directory)
 
         # Upload index.html
-        index_html = resource_string("usagereports", "html/aws/index.html")
+        index_html = resource_string("usagereports", "html/graph/index.html")
         storage.upload(save_bucket, "%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js
         storage.upload(save_bucket, "%s/graph-data.js" % upload_directory, value)
 
-    logging.info('FINISHED: databricks-aws-cost')
+    logging.info('FINISHED: aws-tags-cost')
