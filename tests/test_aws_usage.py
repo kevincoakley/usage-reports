@@ -22,7 +22,7 @@ class AWSUsageTestCase(unittest.TestCase):
                                  }
 
     def test_aws_usage_file(self):
-        aws_usage = AwsUsage("key", "secret")
+        aws_usage = AwsUsage()
 
         with open(self.aws_usage_csv_file_string, "r") as f:
             valid_output = f.read()

@@ -23,8 +23,14 @@ def transform_history_dict(history_dict):
     return history_list
 
 
-def main():
+def main(bucket=None):
     parser = argparse.ArgumentParser()
+
+    parser.add_argument("-b",
+                        metavar="bucket",
+                        dest="bucket",
+                        help="AWS bucket where the billing reports are saved.",
+                        required=True)
 
     parser.add_argument('--debug',
                         dest="debug",
@@ -42,6 +48,11 @@ def main():
 
     logging.info('STARTED: databricks-workers')
 
+    logging.debug("bucket: %s, args[\"bucket\"]: %s", bucket, args["bucket"])
+
+    if bucket is None:
+        bucket = args["bucket"]
+
     databricks_username = os.environ.get("DATABRICKS_USERNAME", None)
     databricks_password = os.environ.get("DATABRICKS_PASSWORD", None)
 
@@ -52,17 +63,8 @@ def main():
         logging.debug("databricks_username: %s", databricks_username)
         logging.debug("databricks_password: %s", databricks_password[:3])
 
-    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
-    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-
-    if aws_access_key_id is not None and aws_secret_access_key is not None:
-        logging.info("Using AWS storage")
-        logging.debug("aws_access_key_id: %s", aws_access_key_id)
-        logging.debug("aws_secret_access_key: %s", aws_secret_access_key[:3])
-        storage = StorageAWS(aws_access_key_id, aws_secret_access_key)
-    else:
-        logging.info("No storage method found, check environment variables")
-        return False
+    logging.info("Using AWS storage")
+    storage = StorageAWS()
 
     # Construct the upload_directory based on the year and week of the year
     upload_directory = "clusters/usage/%s/%s" % (datetime.now().strftime("%Y"),
@@ -79,30 +81,30 @@ def main():
         return False
 
     # Download the databricks workers history from the storage
-    downloaded_history = storage.download(upload_directory + "/history.json")
+    downloaded_history = storage.download(bucket, upload_directory + "/history.json")
     logging.debug("downloaded_history:  %s", downloaded_history)
 
     if downloaded_history is None:
         # Upload index.html
         index_html = resource_string("databricksusagereport", "html/index.html")
-        storage.upload("%s/index.html" % upload_directory, index_html)
+        storage.upload(bucket, "%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js
         databricks_graph = DatabricksGraph()
-        storage.upload("%s/graph-data.js" % upload_directory,
+        storage.upload(bucket, "%s/graph-data.js" % upload_directory,
                        databricks_graph.create(usage_list=databricks_workers))
 
         # Upload history.json
         history_list = transform_history_dict(databricks_workers)
         history_json = json.dumps(history_list, ensure_ascii=True, sort_keys=True,
                                   indent=4, separators=(',', ': '))
-        storage.upload("%s/history.json" % upload_directory, history_json)
+        storage.upload(bucket, "%s/history.json" % upload_directory, history_json)
     else:
         history_dict = json.loads(downloaded_history)
 
         # Upload graph-data.js
         databricks_graph = DatabricksGraph()
-        storage.upload("%s/graph-data.js" % upload_directory,
+        storage.upload(bucket, "%s/graph-data.js" % upload_directory,
                        databricks_graph.create(usage_list=databricks_workers,
                                                history_list=history_dict))
 
@@ -113,6 +115,6 @@ def main():
         history_list = transform_history_dict(history_dict)
         history_json = json.dumps(history_list, ensure_ascii=True, sort_keys=True,
                                   indent=4, separators=(',', ': '))
-        storage.upload("%s/history.json" % upload_directory, history_json)
+        storage.upload(bucket, "%s/history.json" % upload_directory, history_json)
 
     logging.info('FINISHED: databricks-workers')

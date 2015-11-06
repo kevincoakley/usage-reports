@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import re
 import logging
 import argparse
@@ -11,13 +10,19 @@ from databricksusagereport.storage.aws import StorageAWS
 from databricksusagereport.graph.aws import AWSGraph
 
 
-def main(bucket=None, path=None):
+def main(save_bucket=None, report_bucket=None, path=None):
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-b",
-                        metavar="bucket",
-                        dest="bucket",
-                        help="AWS bucket where the billing reports are saved.",
+                        metavar="save_bucket",
+                        dest="save_bucket",
+                        help="AWS bucket where the billing report graphs should be saved.",
+                        required=True)
+
+    parser.add_argument("-r",
+                        metavar="report_bucket",
+                        dest="report_bucket",
+                        help="AWS bucket where the billing report is stored.",
                         required=True)
 
     parser.add_argument("-p",
@@ -45,37 +50,30 @@ def main(bucket=None, path=None):
 
     logging.info('STARTED: databricks-aws-cost')
 
-    logging.debug("bucket: %s, path: %s, args[\"bucket\"]: %s, args[\"path\"]: %s", bucket, path,
-                  args["bucket"], args["path"])
+    logging.debug("save_bucket: %s, report_bucket: %s, path: %s, args[\"save_bucket\"]: %s, "
+                  "args[\"report_bucket\"]: %s, args[\"path\"]: %s", save_bucket, report_bucket,
+                  path, args["save_bucket"], args["report_bucket"], args["path"])
 
-    if bucket is None:
-        bucket = args["bucket"]
+    if save_bucket is None:
+        save_bucket = args["save_bucket"]
+
+    if report_bucket is None:
+        report_bucket = args["report_bucket"]
 
     if path is None:
         path = args["path"]
 
-    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
-    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-
-    if aws_access_key_id is None or aws_secret_access_key is None:
-        logging.info("Missing aws_access_key_id and aws_secret_access_key")
-        return False
-    else:
-        logging.debug("aws_access_key_id: %s", aws_access_key_id)
-        logging.debug("aws_secret_access_key: %s", aws_secret_access_key[:3])
-
     logging.info("Using AWS storage")
+    storage = StorageAWS()
 
-    storage = StorageAWS(aws_access_key_id, aws_secret_access_key)
-
-    aws_usage = AwsUsage(aws_access_key_id, aws_secret_access_key)
+    aws_usage = AwsUsage()
     logging.info("Downloading and parsing the latest AWS detailed billing report")
 
-    logging.info("Bucket: %s, Path: %s", bucket, path)
+    logging.info("Report Bucket: %s, Path: %s", report_bucket, path)
     if path is None:
-        aws_clusters_cost = aws_usage.get_current(bucket)
+        aws_clusters_cost = aws_usage.get_current(report_bucket)
     else:
-        aws_clusters_cost = aws_usage.get(bucket, path)
+        aws_clusters_cost = aws_usage.get(report_bucket, path)
 
     logging.debug("aws_cost: %s", aws_clusters_cost)
 
@@ -95,16 +93,16 @@ def main(bucket=None, path=None):
 
         upload_directory = "clusters/cost/%s/%s/%s" % (key, year, month)
 
-        logging.info("Uploading indexes to AWS: %s", upload_directory)
-        storage.upload_index(upload_directory)
+        logging.info("Uploading indexes to AWS: %s / %s", save_bucket, upload_directory)
+        storage.upload_index(save_bucket, upload_directory)
 
-        logging.info("Upload directory: %s", upload_directory)
+        logging.info("Upload directory: %s / %s", save_bucket, upload_directory)
 
         # Upload index.html
         index_html = resource_string("databricksusagereport", "html/index.html")
-        storage.upload("%s/index.html" % upload_directory, index_html)
+        storage.upload(save_bucket, "%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js
-        storage.upload("%s/graph-data.js" % upload_directory, value)
+        storage.upload(save_bucket, "%s/graph-data.js" % upload_directory, value)
 
     logging.info('FINISHED: databricks-aws-cost')
