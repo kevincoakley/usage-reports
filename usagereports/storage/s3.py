@@ -28,6 +28,7 @@ class S3:
                     return None
                 else:
                     self.logger.info("Unknown download error: %s", path)
+                    return None
         else:
             self.logger.info("Bucket not found: %s", bucket)
 
