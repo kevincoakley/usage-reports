@@ -2,23 +2,20 @@
 
 import re
 import csv
-import boto
 import logging
 import zipfile
 import StringIO
 import datetime
-from boto.s3.key import Key
+from databricksusagereport.storage.aws import StorageAWS
 
 
 class AwsUsage:
 
-    def __init__(self, access_key_id, secret_access_key):
+    def __init__(self):
         name = '.'.join([__name__, self.__class__.__name__])
         self.logger = logging.getLogger(name)
-        self.aws_access_key_id = access_key_id
-        self.aws_secret_access_key = secret_access_key
 
-    def get_current(self, bucket_name):
+    def get_current(self, bucket):
         self.logger.info("Started get_current")
 
         path_base = "846273844940-aws-billing-detailed-line-items-with-resources-and-tags"
@@ -27,33 +24,23 @@ class AwsUsage:
                                      datetime.datetime.now().strftime("%Y"),
                                      datetime.datetime.now().strftime("%m"))
 
-        return AwsUsage.get(self, bucket_name, path)
+        return AwsUsage.get(self, bucket, path)
 
-    def get(self, bucket_name, path):
+    def get(self, bucket, path):
         self.logger.info("Started get")
-        s3_conn = boto.connect_s3(aws_access_key_id=self.aws_access_key_id,
-                                  aws_secret_access_key=self.aws_secret_access_key)
-
         self.logger.info("AWS log path: %s", path)
 
-        bucket = s3_conn.get_bucket(bucket_name)
-        self.logger.info("AWS bucket: %s", bucket_name)
+        f = StringIO.StringIO()
 
-        k = Key(bucket)
-        k.key = path
-        if k.exists():
-            self.logger.info("Key exists on AWS: %s", path)
-            f = StringIO.StringIO()
-            k.get_file(f)
-            f.seek(0)
-            zip_file = zipfile.ZipFile(f, "r")
-            if path[:-4] in zip_file.namelist():
-                self.logger.info("CSV file found zipfile: %s", path[:-4])
-                file_content = zip_file.read(path[:-4])
-                return AwsUsage.parse(self, file_content)
-        else:
-            self.logger.info("Key does not exist on AWS: %s", path)
-            return None
+        storage = StorageAWS()
+        f.write(storage.download(bucket, path))
+
+        f.seek(0)
+        zip_file = zipfile.ZipFile(f, "r")
+        if path[:-4] in zip_file.namelist():
+            self.logger.info("CSV file found zipfile: %s", path[:-4])
+            file_content = zip_file.read(path[:-4])
+            return AwsUsage.parse(self, file_content)
 
     def parse(self, csv_string):
         self.logger.info("Started parse")

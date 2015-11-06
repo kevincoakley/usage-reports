@@ -3,7 +3,9 @@
 try:
     from setuptools import setup
     extra = dict(install_requires=[
-        "boto>=2.38.0",
+        "boto3>=1.2",
+        "botocore>=1.3",
+        "requests>=2.8",
     ],
         include_package_data=True,
         test_suite="tests.suite.load_tests",
@@ -19,7 +21,7 @@ def readme():
 
 
 setup(name="databricks-usage-report-scripts",
-      version="0.1.2",
+      version="0.1.3",
       description="Create usage and cost reports for the Databricks service",
       long_description=readme(),
       author="Kevin Coakley",
