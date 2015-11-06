@@ -6,10 +6,10 @@ import logging
 import zipfile
 import StringIO
 import datetime
-from databricksusagereport.storage.aws import StorageAWS
+from usagereports.storage.s3 import S3
 
 
-class AwsUsage:
+class AwsTagsUsage:
 
     def __init__(self):
         name = '.'.join([__name__, self.__class__.__name__])
@@ -24,7 +24,7 @@ class AwsUsage:
                                      datetime.datetime.now().strftime("%Y"),
                                      datetime.datetime.now().strftime("%m"))
 
-        return AwsUsage.get(self, bucket, path)
+        return AwsTagsUsage.get(self, bucket, path)
 
     def get(self, bucket, path):
         self.logger.info("Started get")
@@ -32,7 +32,7 @@ class AwsUsage:
 
         f = StringIO.StringIO()
 
-        storage = StorageAWS()
+        storage = S3()
         f.write(storage.download(bucket, path))
 
         f.seek(0)
@@ -40,7 +40,7 @@ class AwsUsage:
         if path[:-4] in zip_file.namelist():
             self.logger.info("CSV file found zipfile: %s", path[:-4])
             file_content = zip_file.read(path[:-4])
-            return AwsUsage.parse(self, file_content)
+            return AwsTagsUsage.parse(self, file_content)
 
     def parse(self, csv_string):
         self.logger.info("Started parse")

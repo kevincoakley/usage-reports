@@ -1,9 +1,9 @@
 import unittest
 import datetime
-from databricksusagereport.usage.aws import AwsUsage
+from usagereports.usage.aws_tags import AwsTagsUsage
 
 
-class AWSUsageTestCase(unittest.TestCase):
+class AWSTagsUsageTestCase(unittest.TestCase):
 
     def setUp(self):
         self.aws_usage_csv_file_string = "tests/aws/aws-billing-detailed-line-" \
@@ -21,8 +21,8 @@ class AWSUsageTestCase(unittest.TestCase):
                                   "cost": [0.88]}
                                  }
 
-    def test_aws_usage_file(self):
-        aws_usage = AwsUsage()
+    def test_aws_tags_usage_file(self):
+        aws_usage = AwsTagsUsage()
 
         with open(self.aws_usage_csv_file_string, "r") as f:
             valid_output = f.read()

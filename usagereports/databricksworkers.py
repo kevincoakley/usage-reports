@@ -7,9 +7,9 @@ import argparse
 import requests
 from datetime import datetime
 from pkg_resources import resource_string
-from databricksusagereport.usage.databricks import DatabricksUsage
-from databricksusagereport.graph.databricks import DatabricksGraph
-from databricksusagereport.storage.aws import StorageAWS
+from usagereports.usage.databricks_workers import DatabricksWorkersUsage
+from usagereports.graph.databricks_workers import DatabricksWorkersGraph
+from usagereports.storage.s3 import S3
 
 
 def transform_history_dict(history_dict):
@@ -66,14 +66,14 @@ def main(save_bucket, log_level=logging.INFO):
         logging.debug("databricks_password: %s", databricks_password[:3])
 
     logging.info("Using AWS storage")
-    storage = StorageAWS()
+    storage = S3()
 
     # Construct the upload_directory based on the year and week of the year
-    upload_directory = "clusters/usage/%s/%s" % (datetime.now().strftime("%Y"),
-                                                 datetime.now().strftime("%W"))
+    upload_directory = "databricks/workers/%s/%s" % (datetime.now().strftime("%Y"),
+                                                              datetime.now().strftime("%W"))
     logging.info("Upload directory: %s", upload_directory)
 
-    databricks_usage = DatabricksUsage(databricks_username, databricks_password)
+    databricks_usage = DatabricksWorkersUsage(databricks_username, databricks_password)
     try:
         logging.info("Connecting to Databricks API")
         databricks_workers = databricks_usage.get()
@@ -87,12 +87,16 @@ def main(save_bucket, log_level=logging.INFO):
     logging.debug("downloaded_history:  %s", downloaded_history)
 
     if downloaded_history is None:
-        # Upload index.html
-        index_html = resource_string("databricksusagereport", "html/index.html")
+        # Upload directory listing index.html
+        logging.info("Uploading indexes to AWS: %s / %s", save_bucket, upload_directory)
+        storage.upload_index(save_bucket, upload_directory)
+
+        # Upload graph index.html
+        index_html = resource_string("usagereports", "html/graph/index.html")
         storage.upload(save_bucket, "%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js
-        databricks_graph = DatabricksGraph()
+        databricks_graph = DatabricksWorkersGraph()
         storage.upload(save_bucket, "%s/graph-data.js" % upload_directory,
                        databricks_graph.create(usage_list=databricks_workers))
 
@@ -105,7 +109,7 @@ def main(save_bucket, log_level=logging.INFO):
         history_dict = json.loads(downloaded_history)
 
         # Upload graph-data.js
-        databricks_graph = DatabricksGraph()
+        databricks_graph = DatabricksWorkersGraph()
         storage.upload(save_bucket, "%s/graph-data.js" % upload_directory,
                        databricks_graph.create(usage_list=databricks_workers,
                                                history_list=history_dict))
