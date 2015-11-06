@@ -5,9 +5,9 @@ import logging
 import argparse
 from datetime import datetime
 from pkg_resources import resource_string
-from databricksusagereport.usage.aws import AwsUsage
-from databricksusagereport.storage.aws import StorageAWS
-from databricksusagereport.graph.aws import AWSGraph
+from usagereports.usage.aws_tags import AwsTagsUsage
+from usagereports.storage.s3 import S3
+from usagereports.graph.aws_tags import AWSTagsGraph
 
 
 def shell():
@@ -58,9 +58,9 @@ def main(save_bucket, report_bucket, path, log_level=logging.INFO):
     logging.debug("save_bucket: %s, report_bucket: %s, path: %s", save_bucket, report_bucket, path)
 
     logging.info("Using AWS storage")
-    storage = StorageAWS()
+    storage = S3()
 
-    aws_usage = AwsUsage()
+    aws_usage = AwsTagsUsage()
     logging.info("Downloading and parsing the latest AWS detailed billing report")
 
     logging.info("Report Bucket: %s, Path: %s", report_bucket, path)
@@ -71,7 +71,7 @@ def main(save_bucket, report_bucket, path, log_level=logging.INFO):
 
     logging.debug("aws_cost: %s", aws_clusters_cost)
 
-    aws_graph = AWSGraph()
+    aws_graph = AWSTagsGraph()
     aws_cost_graphs = aws_graph.create(usage_list=aws_clusters_cost)
 
     for key, value in aws_cost_graphs.iteritems():
@@ -85,7 +85,7 @@ def main(save_bucket, report_bucket, path, log_level=logging.INFO):
             month = re.search('-(\d{2})\.', path).group(1)
             logging.debug("year: %s, month: %s (path)", year, month)
 
-        upload_directory = "clusters/cost/%s/%s/%s" % (key, year, month)
+        upload_directory = "aws/tags/cost/%s/%s/%s" % (key, year, month)
 
         logging.info("Uploading indexes to AWS: %s / %s", save_bucket, upload_directory)
         storage.upload_index(save_bucket, upload_directory)
@@ -93,7 +93,7 @@ def main(save_bucket, report_bucket, path, log_level=logging.INFO):
         logging.info("Upload directory: %s / %s", save_bucket, upload_directory)
 
         # Upload index.html
-        index_html = resource_string("databricksusagereport", "html/index.html")
+        index_html = resource_string("usagereports", "html/aws/index.html")
         storage.upload(save_bucket, "%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js

@@ -1,5 +1,5 @@
 import urllib
-import databricksusagereport.databricksawscost
+import usagereports.awstagscost
 
 
 def lambda_handler(event, context):
@@ -8,4 +8,4 @@ def lambda_handler(event, context):
 
     print "Bucket: %s Key: %s" % (bucket, key)
 
-    databricksusagereport.databricksawscost.main("mas-dse-usage-reports", bucket, key)
+    usagereports.awstagscost.main("mas-dse-usage-reports", bucket, key)

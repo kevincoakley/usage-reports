@@ -20,29 +20,29 @@ def readme():
         return f.read()
 
 
-setup(name="databricks-usage-report-scripts",
-      version="0.1.4",
-      description="Create usage and cost reports for the Databricks service",
+setup(name="usage-reports",
+      version="0.2.0",
+      description="Create usage and cost reports for AWS and Databricks services",
       long_description=readme(),
       author="Kevin Coakley",
       author_email="kcoakley@sdsc.edu",
       scripts=[
           "bin/databricks-workers",
-          "bin/databricks-aws-cost",
+          "bin/aws-tags-cost",
       ],
       url="",
       packages=[
-          "databricksusagereport",
-          "databricksusagereport/graph",
-          "databricksusagereport/storage",
-          "databricksusagereport/usage",
+          "usagereports",
+          "usagereports/graph",
+          "usagereports/storage",
+          "usagereports/usage",
       ],
       package_data={
-          "databricksusagereport": ["templates/databricks-graph-data.js",
-                                    "templates/graph-data.js",
-                                    "html/index.html",
-                                    "html/aws/index.html",
-                                    ],
+          "usagereports": ["templates/graph-data.js",
+                           "templates/data.js",
+                           "html/graph/index.html",
+                           "html/aws/index.html",
+                           ],
       },
       platforms="Posix; MacOS X",
       classifiers=[

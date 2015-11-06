@@ -6,7 +6,7 @@ from botocore import exceptions as botocore_exceptions
 from pkg_resources import resource_string
 
 
-class StorageAWS:
+class S3:
 
     def __init__(self):
         name = '.'.join([__name__, self.__class__.__name__])
@@ -46,7 +46,7 @@ class StorageAWS:
     def upload_index(self, bucket, path):
         self.logger.info("Upload index file")
 
-        data_bricks_usage_file = resource_string("databricksusagereport", "html/aws/index.html")
+        data_bricks_usage_file = resource_string("usagereports", "html/aws/index.html")
 
         aws_paths = []
         split_path = path.split("/")

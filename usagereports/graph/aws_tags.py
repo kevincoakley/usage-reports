@@ -2,16 +2,16 @@
 
 import re
 import logging
-from databricksusagereport.graph.graph import Graph
+from usagereports.graph.graph import Graph
 
 
-class AWSGraph(Graph):
+class AWSTagsGraph(Graph):
 
     def __init__(self):
         Graph.__init__(self)
         name = '.'.join([__name__, self.__class__.__name__])
         self.logger = logging.getLogger(name)
-        self.title = "AWS Cluster Cost (delayed by 12 hours)"
+        self.title = "AWS Tag Cost (delayed by 12 hours)"
         self.type = "bar"
         self.xaxis = "Date (UTC)"
         self.yaxis = "Cost"

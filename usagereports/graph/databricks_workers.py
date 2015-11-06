@@ -3,10 +3,10 @@
 import re
 import logging
 from datetime import datetime
-from databricksusagereport.graph.graph import Graph
+from usagereports.graph.graph import Graph
 
 
-class DatabricksGraph(Graph):
+class DatabricksWorkersGraph(Graph):
 
     def __init__(self):
         Graph.__init__(self)

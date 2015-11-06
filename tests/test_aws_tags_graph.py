@@ -1,14 +1,14 @@
 import unittest
 import datetime
-from databricksusagereport.graph.aws import AWSGraph
+from usagereports.graph.aws_tags import AWSTagsGraph
 
 
-class AWSGraphTestCase(unittest.TestCase):
+class AWSTagsGraphTestCase(unittest.TestCase):
 
     maxDiff = None
 
     def setUp(self):
-        self.aws_usage_single_file = ["tests/graph/aws_usage_single.js"]
+        self.aws_usage_single_file = ["tests/graph/aws_tags_usage_single.js"]
         self.aws_usage_single = {"team1":
                                  {"date": [datetime.datetime(2015, 10, 1, 1, 0, 0),
                                            datetime.datetime(2015, 10, 1, 2, 0, 0),
@@ -20,9 +20,9 @@ class AWSGraphTestCase(unittest.TestCase):
                                   "cost": [1.00, 1.25, .75, .50, .50, .33, 1.25]}
                                  }
 
-        self.aws_usage_multiple_file = ["tests/graph/aws_usage_multiple_1.js",
-                                        "tests/graph/aws_usage_multiple_2.js",
-                                        "tests/graph/aws_usage_multiple_3.js"]
+        self.aws_usage_multiple_file = ["tests/graph/aws_tags_usage_multiple_1.js",
+                                        "tests/graph/aws_tags_usage_multiple_2.js",
+                                        "tests/graph/aws_tags_usage_multiple_3.js"]
 
         self.aws_usage_multiple = {"team1":
                                    {"date": [datetime.datetime(2015, 10, 1, 1, 0, 0),
@@ -47,8 +47,8 @@ class AWSGraphTestCase(unittest.TestCase):
                                         "cost": [2.00, 2.25, 0.12, 0.13, 1.50]},
                                    }
 
-    def test_aws_graph_single(self):
-        aws_graph = AWSGraph()
+    def test_aws_tags_graph_single(self):
+        aws_graph = AWSTagsGraph()
 
         teams = ["team1"]
 
@@ -60,8 +60,8 @@ class AWSGraphTestCase(unittest.TestCase):
 
         self.assertEqual(aws_graph.create(usage_list=self.aws_usage_single), valid_output)
 
-    def test_aws_graph_multiple(self):
-        aws_graph = AWSGraph()
+    def test_aws_tags_graph_multiple(self):
+        aws_graph = AWSTagsGraph()
 
         teams = ["team1", "team2", "team3"]
 

@@ -1,6 +1,6 @@
-import databricksusagereport.databricksworkers
+import usagereports.databricksworkers
 
 
 def lambda_handler(event, context):
 
-    databricksusagereport.databricksworkers.main("mas-dse-usage-reports")
+    usagereports.databricksworkers.main("mas-dse-usage-reports")

@@ -5,7 +5,7 @@ import requests
 import datetime
 
 
-class DatabricksUsage:
+class DatabricksWorkersUsage:
 
     def __init__(self, username, password):
         name = '.'.join([__name__, self.__class__.__name__])
