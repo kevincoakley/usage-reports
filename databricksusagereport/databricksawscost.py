@@ -10,7 +10,7 @@ from databricksusagereport.storage.aws import StorageAWS
 from databricksusagereport.graph.aws import AWSGraph
 
 
-def main(save_bucket=None, report_bucket=None, path=None):
+def shell():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-b",
@@ -44,24 +44,18 @@ def main(save_bucket=None, report_bucket=None, path=None):
     else:
         log_level = logging.INFO
 
+    main(args["save_bucket"], args["report_bucket"], args["path"], log_level)
+
+
+def main(save_bucket, report_bucket, path, log_level=logging.INFO):
+
     logging.basicConfig(level=log_level,
                         format='%(asctime)s %(name)s %(levelname)s %(message)s',
                         handlers=[logging.StreamHandler()])
 
     logging.info('STARTED: databricks-aws-cost')
 
-    logging.debug("save_bucket: %s, report_bucket: %s, path: %s, args[\"save_bucket\"]: %s, "
-                  "args[\"report_bucket\"]: %s, args[\"path\"]: %s", save_bucket, report_bucket,
-                  path, args["save_bucket"], args["report_bucket"], args["path"])
-
-    if save_bucket is None:
-        save_bucket = args["save_bucket"]
-
-    if report_bucket is None:
-        report_bucket = args["report_bucket"]
-
-    if path is None:
-        path = args["path"]
+    logging.debug("save_bucket: %s, report_bucket: %s, path: %s", save_bucket, report_bucket, path)
 
     logging.info("Using AWS storage")
     storage = StorageAWS()

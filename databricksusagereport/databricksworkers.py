@@ -23,12 +23,12 @@ def transform_history_dict(history_dict):
     return history_list
 
 
-def main(bucket=None):
+def shell():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-b",
-                        metavar="bucket",
-                        dest="bucket",
+                        metavar="save_bucket",
+                        dest="save_bucket",
                         help="AWS bucket where the billing reports are saved.",
                         required=True)
 
@@ -42,16 +42,18 @@ def main(bucket=None):
     else:
         log_level = logging.INFO
 
+    main(args["save_bucket"], log_level)
+
+
+def main(save_bucket, log_level=logging.INFO):
+
     logging.basicConfig(level=log_level,
                         format='%(asctime)s %(name)s %(levelname)s %(message)s',
                         handlers=[logging.StreamHandler()])
 
     logging.info('STARTED: databricks-workers')
 
-    logging.debug("bucket: %s, args[\"bucket\"]: %s", bucket, args["bucket"])
-
-    if bucket is None:
-        bucket = args["bucket"]
+    logging.debug("bucket: %s", save_bucket)
 
     databricks_username = os.environ.get("DATABRICKS_USERNAME", None)
     databricks_password = os.environ.get("DATABRICKS_PASSWORD", None)
@@ -81,30 +83,30 @@ def main(bucket=None):
         return False
 
     # Download the databricks workers history from the storage
-    downloaded_history = storage.download(bucket, upload_directory + "/history.json")
+    downloaded_history = storage.download(save_bucket, upload_directory + "/history.json")
     logging.debug("downloaded_history:  %s", downloaded_history)
 
     if downloaded_history is None:
         # Upload index.html
         index_html = resource_string("databricksusagereport", "html/index.html")
-        storage.upload(bucket, "%s/index.html" % upload_directory, index_html)
+        storage.upload(save_bucket, "%s/index.html" % upload_directory, index_html)
 
         # Upload graph-data.js
         databricks_graph = DatabricksGraph()
-        storage.upload(bucket, "%s/graph-data.js" % upload_directory,
+        storage.upload(save_bucket, "%s/graph-data.js" % upload_directory,
                        databricks_graph.create(usage_list=databricks_workers))
 
         # Upload history.json
         history_list = transform_history_dict(databricks_workers)
         history_json = json.dumps(history_list, ensure_ascii=True, sort_keys=True,
                                   indent=4, separators=(',', ': '))
-        storage.upload(bucket, "%s/history.json" % upload_directory, history_json)
+        storage.upload(save_bucket, "%s/history.json" % upload_directory, history_json)
     else:
         history_dict = json.loads(downloaded_history)
 
         # Upload graph-data.js
         databricks_graph = DatabricksGraph()
-        storage.upload(bucket, "%s/graph-data.js" % upload_directory,
+        storage.upload(save_bucket, "%s/graph-data.js" % upload_directory,
                        databricks_graph.create(usage_list=databricks_workers,
                                                history_list=history_dict))
 
@@ -115,6 +117,6 @@ def main(bucket=None):
         history_list = transform_history_dict(history_dict)
         history_json = json.dumps(history_list, ensure_ascii=True, sort_keys=True,
                                   indent=4, separators=(',', ': '))
-        storage.upload(bucket, "%s/history.json" % upload_directory, history_json)
+        storage.upload(save_bucket, "%s/history.json" % upload_directory, history_json)
 
     logging.info('FINISHED: databricks-workers')
