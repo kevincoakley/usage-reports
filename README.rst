@@ -79,8 +79,7 @@ Remove via pip::
 AWS Lambda
 ##########
 
-(1) Create an IAM Role and attach the following policy config/iam/lambda_role_policy.json, replacing
-report_bucket and save_bucket.
+(1) Create an IAM Role and attach the following policy config/iam/lambda_role_policy.json, replacing report_bucket and save_bucket.
 (2) Create and upload a zip package of the code for AWS Lambda (see below).
 (3) Configure the AWS Lambda function:
 
@@ -89,7 +88,6 @@ report_bucket and save_bucket.
     (3) Role: Role from step #1
     (4) Memory: 128 MB
     (5) Timeout: 5 min
-
 (4) Configure the AWS Lambda event source:
 
     (1) aws-tags-cost:
@@ -97,8 +95,7 @@ report_bucket and save_bucket.
         (1) Event source type: S3
         (2) Bucket: the bucket with the AWS Detailed Billing Report
         (3) Event type: Object Create (ALL)
-        (4) Prefix: ############-aws-billing-detailed-line-items-with-resources-and-tags (replace ############
-        with the actual numbers in the object name)
+        (4) Prefix: ############-aws-billing-detailed-line-items-with-resources-and-tags (replace ############ with the actual numbers in the object name)
         (5) Enable event source: Enable Now
 
     (2) databricks-workers:
