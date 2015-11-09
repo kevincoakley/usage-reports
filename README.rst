@@ -50,6 +50,17 @@ Note: aws-tags-cost and databricks-workers can use the same S3 Bucket for Websit
 Command Line
 ############
 
+(1) Install command line scripts from source (see below).
+(2) Configure AWS Credentials for boto3:
+    (1) Copy /config/boto3/_aws/* to ~/.aws/
+    (2) Update config and credentials with valid values.
+(3) Configure Databricks Credentials (only needed for databricks-workers):
+    (1) Copy /config/environ.sh to a
+    secure location.
+    (2) Update environ.sh with your Datbricks username and password.
+    (3) Run: source environ.sh
+
+
 Install from source::
 
     $ git clone https://github.com/kevincoakley/usage-reports.git
