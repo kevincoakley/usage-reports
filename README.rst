@@ -31,16 +31,16 @@ Requirements
 aws-tags-cost
 =============
 
-(1) `AWS Detailed Billing Reports with Tags turned on<http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/detailed-billing-reports.html#turnonreports>`_
-(2) `S3 Bucket configured for Website Hosting<http://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html>`_
-(3) `S3 Bucket Listing Enabled for Website Bucket<https://github.com/rgrp/s3-bucket-listing/>`_
+(1) `AWS Detailed Billing Reports with Tags turned on <http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/detailed-billing-reports.html#turnonreports>`_
+(2) `S3 Bucket configured for Website Hosting <http://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html>`_
+(3) `S3 Bucket Listing Enabled for Website Bucket <https://github.com/rgrp/s3-bucket-listing/>`_
 
 
 databricks-workers
 ==================
 (1) Your IP address must be white listed for the Databricks API. Contact help@databricks.com to have your IP address whitelisted.
-(2) `S3 Bucket configured for Website Hosting<http://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html>`_
-(3) `S3 Bucket Listing Enabled for Website Bucket<https://github.com/rgrp/s3-bucket-listing/>`_
+(2) `S3 Bucket configured for Website Hosting <http://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html>`_
+(3) `S3 Bucket Listing Enabled for Website Bucket <https://github.com/rgrp/s3-bucket-listing/>`_
 
 
 Note: aws-tags-cost and databricks-workers can use the same S3 Bucket for Website hosting
