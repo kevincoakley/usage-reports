@@ -122,6 +122,8 @@ How to create a zip package to use with AWS Lambda::
     cp /path/to/usage-reports/lambda_aws_cost.py lambda.py
     or
     cp /path/to/usage-reports/lambda_databricks_workers.py lambda.py
+    cp /path/to/usage-reports/lambda_databricks_secrets-example.py lambda_databricks_secrets.py
+    ** Update lambda_databricks_secrets.py with a Databricks username and password **
     zip -r lambda.zip *
 
 
