@@ -49,44 +49,52 @@ class AwsTagsUsage:
 
         aws_usage_dict = dict()
 
-        for row in line:
-            if row['user:Cluster'] is not "":
-                name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
+        if "user:Cluster" in line.fieldnames:
+            self.logger.debug("user:Cluster exists in CSV fieldnames")
 
-                # Cluster is not in aws_usage_dict
-                if name not in aws_usage_dict.keys():
-                    self.logger.debug("Cluster %s not in aws_usage_dict", name)
-                    aws_usage_dict[name] = {"date": [datetime.datetime.
-                                                     strptime(row['UsageStartDate'][:10],
-                                                              '%Y-%m-%d')],
-                                            "cost": [float("{0:.02f}".format(float(row["Cost"])))]}
+            for row in line:
+                if row['user:Cluster'] is not "":
+                    name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
 
-                # Cluster and date are in aws_usage_dict
-                elif name in aws_usage_dict.keys() and \
-                    datetime.datetime.strptime(row['UsageStartDate']
-                                               [:10], '%Y-%m-%d') in aws_usage_dict[name]["date"]:
-                    self.logger.debug("Cluster %s and %s in aws_usage_dict", name,
-                                      datetime.datetime.strptime(row['UsageStartDate']
-                                                                 [:10], '%Y-%m-%d'))
-                    date_index = aws_usage_dict[name]['date'].\
-                        index(datetime.datetime.strptime(row['UsageStartDate'][:10],
-                                                         '%Y-%m-%d'))
-                    date_cost = float(aws_usage_dict[name]["cost"]
-                                      [date_index]) + float(row["Cost"])
-                    aws_usage_dict[name]["cost"][date_index] = float("{0:.02f}".format
-                                                                     (float(date_cost)))
+                    # Cluster is not in aws_usage_dict
+                    if name not in aws_usage_dict.keys():
+                        self.logger.debug("Cluster %s not in aws_usage_dict", name)
+                        aws_usage_dict[name] = {"date": [datetime.datetime.
+                                                         strptime(row['UsageStartDate'][:10],
+                                                                  '%Y-%m-%d')],
+                                                "cost":
+                                                    [float("{0:.02f}".format(
+                                                        float(row["BlendedCost"])))]}
 
-                # Cluster is in aws_usage_dict but date is not
-                else:
-                    self.logger.debug("Cluster %s is in aws_usage_dict but the date %s is not",
-                                      name,
-                                      datetime.datetime.strptime(row['UsageStartDate']
-                                                                 [:10], '%Y-%m-%d'))
-                    aws_usage_dict[name]["date"].append(datetime.datetime.
-                                                        strptime(row['UsageStartDate'][:10],
-                                                                 '%Y-%m-%d'))
-                    aws_usage_dict[name]["cost"].append(float("{0:.02f}".format
-                                                              (float(row["Cost"]))))
+                    # Cluster and date are in aws_usage_dict
+                    elif name in aws_usage_dict.keys() and \
+                        datetime.datetime.strptime(row['UsageStartDate'][:10], '%Y-%m-%d') \
+                            in aws_usage_dict[name]["date"]:
+                        self.logger.debug("Cluster %s and %s in aws_usage_dict", name,
+                                          datetime.datetime.strptime(row['UsageStartDate']
+                                                                     [:10], '%Y-%m-%d'))
+                        date_index = aws_usage_dict[name]['date'].\
+                            index(datetime.datetime.strptime(row['UsageStartDate'][:10],
+                                                             '%Y-%m-%d'))
+                        date_cost = float(aws_usage_dict[name]["cost"]
+                                          [date_index]) + float(row["BlendedCost"])
+                        aws_usage_dict[name]["cost"][date_index] = float("{0:.02f}".format
+                                                                         (float(date_cost)))
+
+                    # Cluster is in aws_usage_dict but date is not
+                    else:
+                        self.logger.debug("Cluster %s is in aws_usage_dict but the date %s is not",
+                                          name,
+                                          datetime.datetime.strptime(row['UsageStartDate']
+                                                                     [:10], '%Y-%m-%d'))
+                        aws_usage_dict[name]["date"].append(datetime.datetime.
+                                                            strptime(row['UsageStartDate'][:10],
+                                                                     '%Y-%m-%d'))
+                        aws_usage_dict[name]["cost"].append(float("{0:.02f}".format
+                                                                  (float(row["BlendedCost"]))))
+
+        else:
+            self.logger.debug("user:Cluster does not exist in CSV fieldnames")
 
         self.logger.debug("aws_usage_dict: %s", aws_usage_dict)
 
