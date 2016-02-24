@@ -49,16 +49,35 @@ class AwsTagsUsage:
 
         aws_usage_dict = dict()
 
-        if "user:Cluster" in line.fieldnames:
-            self.logger.debug("user:Cluster exists in CSV fieldnames")
+        if "user:Cluster" in line.fieldnames or "user:cluster" in line.fieldnames \
+                or "user:Course" in line.fieldnames or "user:course" in line.fieldnames:
+            self.logger.debug("user:cluster or user:course exists in CSV fieldnames")
 
             for row in line:
-                if row['user:Cluster'] is not "":
-                    name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
 
-                    # Cluster is not in aws_usage_dict
+                name = None
+
+                if "user:Cluster" in line.fieldnames:
+                    if row['user:Cluster'] is not "":
+                        name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
+
+                if "user:cluster" in line.fieldnames:
+                    if row['user:cluster'] is not "":
+                        name = re.sub("[^A-Za-z0-9]", "_", row["user:cluster"])
+
+                if "user:Course" in line.fieldnames:
+                    if row['user:Course'] is not "":
+                        name = re.sub("[^A-Za-z0-9]", "_", row["user:Course"])
+
+                if "user:course" in line.fieldnames:
+                    if row['user:course'] is not "":
+                        name = re.sub("[^A-Za-z0-9]", "_", row["user:course"])
+
+                if name is not None:
+
+                    # Cluster or course is not in aws_usage_dict
                     if name not in aws_usage_dict.keys():
-                        self.logger.debug("Cluster %s not in aws_usage_dict", name)
+                        self.logger.debug("Cluster or course %s not in aws_usage_dict", name)
                         aws_usage_dict[name] = {"date": [datetime.datetime.
                                                          strptime(row['UsageStartDate'][:10],
                                                                   '%Y-%m-%d')],
@@ -66,11 +85,11 @@ class AwsTagsUsage:
                                                     [float("{0:.02f}".format(
                                                         float(row["BlendedCost"])))]}
 
-                    # Cluster and date are in aws_usage_dict
+                    # Cluster or course and date are in aws_usage_dict
                     elif name in aws_usage_dict.keys() and \
                         datetime.datetime.strptime(row['UsageStartDate'][:10], '%Y-%m-%d') \
                             in aws_usage_dict[name]["date"]:
-                        self.logger.debug("Cluster %s and %s in aws_usage_dict", name,
+                        self.logger.debug("Cluster or course %s and %s in aws_usage_dict", name,
                                           datetime.datetime.strptime(row['UsageStartDate']
                                                                      [:10], '%Y-%m-%d'))
                         date_index = aws_usage_dict[name]['date'].\
@@ -81,9 +100,10 @@ class AwsTagsUsage:
                         aws_usage_dict[name]["cost"][date_index] = float("{0:.02f}".format
                                                                          (float(date_cost)))
 
-                    # Cluster is in aws_usage_dict but date is not
+                    # Cluster or course is in aws_usage_dict but date is not
                     else:
-                        self.logger.debug("Cluster %s is in aws_usage_dict but the date %s is not",
+                        self.logger.debug("Cluster or course %s is in aws_usage_dict but the "
+                                          "date %s is not",
                                           name,
                                           datetime.datetime.strptime(row['UsageStartDate']
                                                                      [:10], '%Y-%m-%d'))
@@ -94,7 +114,7 @@ class AwsTagsUsage:
                                                                   (float(row["BlendedCost"]))))
 
         else:
-            self.logger.debug("user:Cluster does not exist in CSV fieldnames")
+            self.logger.debug("user:cluster or user:course does not exist in CSV fieldnames")
 
         self.logger.debug("aws_usage_dict: %s", aws_usage_dict)
 
