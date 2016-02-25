@@ -21,7 +21,7 @@ def readme():
 
 
 setup(name="usage-reports",
-      version="0.2.2",
+      version="0.2.3",
       description="Create usage and cost reports for AWS and Databricks services",
       long_description=readme(),
       author="Kevin Coakley",
