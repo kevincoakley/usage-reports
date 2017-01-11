@@ -108,3 +108,4 @@ crashlytics-build.properties
 
 # Don't commit the username and password for databricks
 lambda_databricks_secrets.py
+vault/
