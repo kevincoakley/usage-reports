@@ -13,7 +13,7 @@ class S3:
         self.logger = logging.getLogger(name)
 
     def download(self, bucket, path):
-        self.logger.info("Started download")
+        self.logger.info("Started download: s3://%s/%s", bucket, path)
 
         s3 = boto3.resource('s3')
 
@@ -33,7 +33,7 @@ class S3:
             self.logger.info("Bucket not found: %s", bucket)
 
     def upload(self, bucket, path, content):
-        self.logger.info("Started upload")
+        self.logger.info("Started upload: s3://%s/%s", bucket, path)
         content_type = 'text/html'
 
         s3 = boto3.resource('s3')
