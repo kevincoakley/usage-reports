@@ -7,17 +7,21 @@ import datetime
 
 class DatabricksWorkersUsage:
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, server):
         name = '.'.join([__name__, self.__class__.__name__])
         self.logger = logging.getLogger(name)
         self.username = username
         self.password = password
+        self.server = server
 
     def get(self):
-        self.logger.info("Started get")
+        self.logger.info("Started Databricks Workers get")
 
-        r = requests.get('https://dbc-f6057a15-2f8d.cloud.databricks.com:34563/'
-                         'api/1.1/clusters/list', auth=(self.username, self.password))
+        api_url = "https://%s/api/1.1/clusters/list" % self.server
+
+        self.logger.info("requesting: %s", api_url)
+
+        r = requests.get(api_url, auth=(self.username, self.password))
 
         json_output = r.json()
 

@@ -60,13 +60,15 @@ def main(save_bucket, log_level=logging.INFO):
 
     databricks_username = os.environ.get("DATABRICKS_USERNAME", None)
     databricks_password = os.environ.get("DATABRICKS_PASSWORD", None)
+    databricks_server = os.environ.get("DATABRICKS_SERVER", None)
 
-    if databricks_username is None or databricks_password is None:
-        logging.info("Missing databricks_username, databricks_password")
+    if databricks_username is None or databricks_password is None or databricks_server is None:
+        logging.info("Missing databricks_username, databricks_password, databricks_server")
         return None
     else:
         logging.debug("databricks_username: %s", databricks_username)
         logging.debug("databricks_password: %s", databricks_password[:3])
+        logging.debug("databricks_server: %s", databricks_server)
 
     logging.info("Using AWS storage")
     storage = S3()
@@ -76,7 +78,8 @@ def main(save_bucket, log_level=logging.INFO):
                                                      datetime.now().strftime("%W"))
     logging.info("Upload directory: %s", upload_directory)
 
-    databricks_usage = DatabricksWorkersUsage(databricks_username, databricks_password)
+    databricks_usage = DatabricksWorkersUsage(databricks_username, databricks_password,
+                                              databricks_server)
     try:
         logging.info("Connecting to Databricks API")
         databricks_workers = databricks_usage.get()
