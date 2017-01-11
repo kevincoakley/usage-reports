@@ -29,7 +29,7 @@ def shell():
     parser.add_argument("-b",
                         metavar="save_bucket",
                         dest="save_bucket",
-                        help="AWS bucket where the billing reports are saved.",
+                        help="AWS bucket where the usage reports are saved. Don't include s3://.",
                         required=True)
 
     parser.add_argument('--debug',
