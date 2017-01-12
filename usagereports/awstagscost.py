@@ -44,6 +44,9 @@ def shell():
     else:
         log_level = logging.INFO
 
+    logging.getLogger("boto3").setLevel(logging.ERROR)
+    logging.getLogger("botocore").setLevel(logging.ERROR)
+
     main(args["save_bucket"], args["report_bucket"], args["path"], log_level)
 
 

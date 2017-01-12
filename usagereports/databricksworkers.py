@@ -29,7 +29,7 @@ def shell():
     parser.add_argument("-b",
                         metavar="save_bucket",
                         dest="save_bucket",
-                        help="AWS bucket where the billing reports are saved.",
+                        help="AWS bucket where the usage reports are saved. Don't include s3://.",
                         required=True)
 
     parser.add_argument('--debug',
@@ -41,6 +41,9 @@ def shell():
         log_level = logging.DEBUG
     else:
         log_level = logging.INFO
+
+    logging.getLogger("boto3").setLevel(logging.ERROR)
+    logging.getLogger("botocore").setLevel(logging.ERROR)
 
     main(args["save_bucket"], log_level)
 
@@ -57,13 +60,15 @@ def main(save_bucket, log_level=logging.INFO):
 
     databricks_username = os.environ.get("DATABRICKS_USERNAME", None)
     databricks_password = os.environ.get("DATABRICKS_PASSWORD", None)
+    databricks_server = os.environ.get("DATABRICKS_SERVER", None)
 
-    if databricks_username is None or databricks_password is None:
-        logging.info("Missing databricks_username, databricks_password")
+    if databricks_username is None or databricks_password is None or databricks_server is None:
+        logging.info("Missing databricks_username, databricks_password, databricks_server")
         return None
     else:
         logging.debug("databricks_username: %s", databricks_username)
         logging.debug("databricks_password: %s", databricks_password[:3])
+        logging.debug("databricks_server: %s", databricks_server)
 
     logging.info("Using AWS storage")
     storage = S3()
@@ -73,7 +78,8 @@ def main(save_bucket, log_level=logging.INFO):
                                                      datetime.now().strftime("%W"))
     logging.info("Upload directory: %s", upload_directory)
 
-    databricks_usage = DatabricksWorkersUsage(databricks_username, databricks_password)
+    databricks_usage = DatabricksWorkersUsage(databricks_username, databricks_password,
+                                              databricks_server)
     try:
         logging.info("Connecting to Databricks API")
         databricks_workers = databricks_usage.get()
@@ -122,5 +128,10 @@ def main(save_bucket, log_level=logging.INFO):
         history_json = json.dumps(history_list, ensure_ascii=True, sort_keys=True,
                                   indent=4, separators=(',', ': '))
         storage.upload(save_bucket, "%s/history.json" % upload_directory, history_json)
+
+    # Upload the raw output from the Databricks API
+    raw_json = json.dumps(databricks_usage.raw_json, ensure_ascii=True, sort_keys=True,
+                          indent=4, separators=(',', ': '))
+    storage.upload(save_bucket, "%s/raw_output.json" % upload_directory, raw_json)
 
     logging.info('FINISHED: databricks-workers')
