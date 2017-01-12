@@ -50,8 +50,10 @@ class AwsTagsUsage:
         aws_usage_dict = dict()
 
         if "user:Cluster" in line.fieldnames or "user:cluster" in line.fieldnames \
-                or "user:Course" in line.fieldnames or "user:course" in line.fieldnames:
-            self.logger.debug("user:cluster or user:course exists in CSV fieldnames")
+                or "user:Course" in line.fieldnames or "user:course" in line.fieldnames \
+                or "user:ClusterName" in line.fieldnames or "user:clustername" in line.fieldnames:
+            self.logger.debug("user:cluster, user:clustername and user:course"
+                              " exists in CSV fieldnames")
 
             for row in line:
 
@@ -72,6 +74,14 @@ class AwsTagsUsage:
                 if "user:course" in line.fieldnames:
                     if row['user:course'] is not "":
                         name = re.sub("[^A-Za-z0-9]", "_", row["user:course"])
+
+                if "user:ClusterName" in line.fieldnames:
+                    if row['user:ClusterName'] is not "":
+                        name = re.sub("[^A-Za-z0-9]", "_", row["user:ClusterName"])
+
+                if "user:clustername" in line.fieldnames:
+                    if row['user:clustername'] is not "":
+                        name = re.sub("[^A-Za-z0-9]", "_", row["user:clustername"])
 
                 if name is not None:
 
