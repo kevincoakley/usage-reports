@@ -129,4 +129,9 @@ def main(save_bucket, log_level=logging.INFO):
                                   indent=4, separators=(',', ': '))
         storage.upload(save_bucket, "%s/history.json" % upload_directory, history_json)
 
+    # Upload the raw output from the Databricks API
+    raw_json = json.dumps(databricks_usage.raw_json, ensure_ascii=True, sort_keys=True,
+                          indent=4, separators=(',', ': '))
+    storage.upload(save_bucket, "%s/raw_output.json" % upload_directory, raw_json)
+
     logging.info('FINISHED: databricks-workers')
