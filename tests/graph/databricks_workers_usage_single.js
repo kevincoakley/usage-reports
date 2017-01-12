@@ -28,7 +28,7 @@ var layout = {
     barmode: 'group',
     showlegend: true,
     "xaxis": {
-        "title": "Date & Hour (Pacific Time Zone)"
+        "title": "Date & Hour (UTC)"
     },
     "yaxis": {
         "title": "Workers"
