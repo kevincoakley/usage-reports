@@ -14,7 +14,7 @@ class AWSTagsUsageTestCase(unittest.TestCase):
                                                     "with-resources-and-tags-blended-missing-" \
                                                     "tags.csv"
 
-        self.aws_usage_output = {"admin_c1":
+        self.aws_usage_output = {"admin":
                                  {"date": [datetime.datetime(2015, 9, 30, 0, 0)],
                                   "cost": [0.20]},
                                  "team1":
