@@ -85,6 +85,10 @@ class AwsTagsUsage:
 
                 if name is not None:
 
+                    # Everything in the tag before the _ is the name used for the graph
+                    self.logger.debug("Tag Name: Before: %s After %s", name, name.split("_")[0])
+                    name = name.split("_")[0]
+
                     # Cluster or course is not in aws_usage_dict
                     if name not in aws_usage_dict.keys():
                         self.logger.debug("Cluster or course %s not in aws_usage_dict", name)
