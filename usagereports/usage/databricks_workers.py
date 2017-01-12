@@ -17,7 +17,7 @@ class DatabricksWorkersUsage:
     def get(self):
         self.logger.info("Started Databricks Workers get")
 
-        api_url = "https://%s/api/1.1/clusters/list" % self.server
+        api_url = "https://%s/api/2.0/clusters/list" % self.server
 
         self.logger.info("requesting: %s", api_url)
 
@@ -28,8 +28,8 @@ class DatabricksWorkersUsage:
         self.logger.info("jsonoutput: %s", json_output)
 
         databricks_usage_list = []
-        for server in json_output:
-            d = {'name': server['name'], 'numWorkers': server['numWorkers'],
+        for server in json_output["clusters"]:
+            d = {'name': server['cluster_name'], 'numWorkers': server['num_workers'],
                  'date': datetime.datetime.now()}
             databricks_usage_list.append(d)
 
