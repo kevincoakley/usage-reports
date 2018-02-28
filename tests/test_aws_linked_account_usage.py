@@ -11,14 +11,14 @@ class AWSLinkedAccountUsageTestCase(unittest.TestCase):
                                                         "items-with-resources-and-tags-blended-" \
                                                         "linked.csv"
 
-        self.aws_usage_output = {"987654321098":
+        self.aws_usage_output = {"aws987654321098":
                                  {"date": [datetime.datetime(2015, 9, 30, 0, 0)],
                                   "cost": [0.20]},
-                                 "123456789012":
+                                 "aws123456789012":
                                  {"date": [datetime.datetime(2015, 9, 29, 0, 0),
                                            datetime.datetime(2015, 9, 30, 0, 0)],
                                   "cost": [1.44, 1.10]},
-                                 "890123456789":
+                                 "aws890123456789":
                                  {"date": [datetime.datetime(2015, 9, 30, 0, 0)],
                                   "cost": [0.88]}
                                  }

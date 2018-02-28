@@ -89,7 +89,7 @@ class AwsTagsUsage:
                     if "LinkedAccountId" in line.fieldnames:
                         if row['LinkedAccountId'] != "846273844940" and \
                                 row['LinkedAccountId'] is not "":
-                            name = row["LinkedAccountId"]
+                            name = "aws%s" % row["LinkedAccountId"]
 
                 if name is not None:
 
