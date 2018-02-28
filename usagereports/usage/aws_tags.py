@@ -83,6 +83,11 @@ class AwsTagsUsage:
                     if row['user:clustername'] is not "":
                         name = re.sub("[^A-Za-z0-9]", "_", row["user:clustername"])
 
+                if "LinkedAccountId" in line.fieldnames:
+                    if row['LinkedAccountId'] != "846273844940" and \
+                            row['LinkedAccountId'] is not "":
+                        name = row["LinkedAccountId"]
+
                 if name is not None:
 
                     # Everything in the tag before the _ is the name used for the graph
