@@ -27,6 +27,11 @@ class AWSTagsGraph(Graph):
             # We only want letters and numbers in the name
             name = re.sub("[^A-Za-z0-9]", "_", key)
 
+            # Javascript variables cannot start with numbers, add var_ if the first char is a
+            # number
+            if name[0].isdigit():
+                name = "var_%s" % name
+
             x_axis = []
             y_axis = []
 
