@@ -59,29 +59,37 @@ class AwsTagsUsage:
 
                 name = None
 
-                if "user:Cluster" in line.fieldnames:
-                    if row['user:Cluster'] is not "":
-                        name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
+                # Only process rows that are of type LineItem
+                if row['RecordType'] == "LineItem":
 
-                if "user:cluster" in line.fieldnames:
-                    if row['user:cluster'] is not "":
-                        name = re.sub("[^A-Za-z0-9]", "_", row["user:cluster"])
+                    if "user:Cluster" in line.fieldnames:
+                        if row['user:Cluster'] is not "":
+                            name = re.sub("[^A-Za-z0-9]", "_", row["user:Cluster"])
 
-                if "user:Course" in line.fieldnames:
-                    if row['user:Course'] is not "":
-                        name = re.sub("[^A-Za-z0-9]", "_", row["user:Course"])
+                    if "user:cluster" in line.fieldnames:
+                        if row['user:cluster'] is not "":
+                            name = re.sub("[^A-Za-z0-9]", "_", row["user:cluster"])
 
-                if "user:course" in line.fieldnames:
-                    if row['user:course'] is not "":
-                        name = re.sub("[^A-Za-z0-9]", "_", row["user:course"])
+                    if "user:Course" in line.fieldnames:
+                        if row['user:Course'] is not "":
+                            name = re.sub("[^A-Za-z0-9]", "_", row["user:Course"])
 
-                if "user:ClusterName" in line.fieldnames:
-                    if row['user:ClusterName'] is not "":
-                        name = re.sub("[^A-Za-z0-9]", "_", row["user:ClusterName"])
+                    if "user:course" in line.fieldnames:
+                        if row['user:course'] is not "":
+                            name = re.sub("[^A-Za-z0-9]", "_", row["user:course"])
 
-                if "user:clustername" in line.fieldnames:
-                    if row['user:clustername'] is not "":
-                        name = re.sub("[^A-Za-z0-9]", "_", row["user:clustername"])
+                    if "user:ClusterName" in line.fieldnames:
+                        if row['user:ClusterName'] is not "":
+                            name = re.sub("[^A-Za-z0-9]", "_", row["user:ClusterName"])
+
+                    if "user:clustername" in line.fieldnames:
+                        if row['user:clustername'] is not "":
+                            name = re.sub("[^A-Za-z0-9]", "_", row["user:clustername"])
+
+                    if "LinkedAccountId" in line.fieldnames:
+                        if row['LinkedAccountId'] != "846273844940" and \
+                                row['LinkedAccountId'] is not "":
+                            name = "aws%s" % row["LinkedAccountId"]
 
                 if name is not None:
 
